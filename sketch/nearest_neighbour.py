@@ -44,13 +44,13 @@ class NearestNeighbourAlgorithm:
             S = sum([self.get_distance_between_cities(i, i + 1)
                      for i in range(0, self.city_count - 1, 1)]) + sqrt(
                 (self.X[self.way[self.city_count - 1]] - self.X[self.way[0]]) ** 2 + (
-                        self.Y[self.way[self.city_count - 1]] - self.Y[self.way[0]]) ** 2)
+                        self.Y[self.way[self.city_count - 1]] - self.Y[self.way[0]]) ** 2)          
             RS.append(S)
             RW.append(self.way)
         self.total_distance = min(RS)
-        way = RW[RS.index(min(RS))]
-        self.X1 = [self.X[way[i]] for i in range(0, self.city_count, 1)]
-        self.Y1 = [self.Y[way[i]] for i in range(0, self.city_count, 1)]
+        self.way = RW[RS.index(min(RS))]
+        self.X1 = [self.X[self.way[i]] for i in range(0, self.city_count, 1)]
+        self.Y1 = [self.Y[self.way[i]] for i in range(0, self.city_count, 1)]
 
     def generate_random_cities(self):
         return np.random.uniform(0, self.x_size, self.city_count), \
