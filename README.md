@@ -1,11 +1,32 @@
-## Setup
-* activate virtualenv 
-```cmd
-source env/bin/activate  # On Windows use `env\Scripts\activate`
+# backend
+* Install dependencies
 ```
-* create db
-```cmd
-cd traveler_api
-python manage.py migrate
+pip install -r requirements.txt
 ```
 
+* Run server
+```python
+python manage.py runserver
+```
+
+# frontend
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
