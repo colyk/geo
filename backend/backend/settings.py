@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'geo',
 ]
 
 MIDDLEWARE = [
@@ -53,11 +54,12 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(os.path.dirname(BASE_DIR), 'frontend', 'dist'),],
+        'DIRS': [os.path.join(BASE_DIR, 'dist')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
+                'django.template.context_processors.static',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -116,16 +118,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-# STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'frontend', 'dist')
-STATIC_URL = '/dist/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'dist')
+STATIC_ROOT = 'static'
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
+    BASE_DIR,
+    os.path.join(BASE_DIR, 'dist'),
+    os.path.join(BASE_DIR, 'dist', 'css'),
+    os.path.join(BASE_DIR, 'dist', 'js'),
     os.path.join(os.path.dirname(BASE_DIR), 'frontend', 'dist'),
     os.path.join(os.path.dirname(BASE_DIR), 'frontend', 'dist', 'css'),
     os.path.join(os.path.dirname(BASE_DIR), 'frontend', 'dist', 'js'),
-]
-
-STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
