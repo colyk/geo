@@ -9,5 +9,5 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html')),
 
     path('', include('geo.urls')),
-] + static(settings.STATIC_URL)
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

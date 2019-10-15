@@ -6,7 +6,7 @@ pip install -r requirements.txt
 
 * Run server
 ```python
-python manage.py runserver
+python manage.py run
 ```
 
 # frontend
