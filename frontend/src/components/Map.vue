@@ -6,6 +6,7 @@
       <span>Bounds: {{ bounds }}</span>
     </div>
     <l-map
+      @contextmenu="onContextMenu"
       style="height: 80%; width: 100%"
       :zoom="zoom"
       :center="center"
@@ -14,31 +15,46 @@
       @update:bounds="boundsUpdated"
     >
       <l-tile-layer :url="url"></l-tile-layer>
+      <l-marker v-if="markerLatLng" :lat-lng="markerLatLng" ></l-marker>
     </l-map>
   </div>
+
+
 </template>
 
 <script>
+import { getCurrentPosition } from '../utils';
 
-  export default {
-    data() {
-      return {
-        url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-        zoom: 3,
-        center: [47.413220, -1.219482],
-        bounds: null
-      };
+export default {
+  data() {
+    return {
+      // https://wiki.openstreetmap.org/wiki/Tile_servers
+      url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      zoom: 11,
+      center: [47.413220, -1.219482],
+      bounds: null,
+      markerLatLng: null
+    };
+  },
+  mounted() {
+    getCurrentPosition().then(({coords}) => {
+      this.center = [coords.latitude, coords.longitude];
+      this.markerLatLng = this.center;
+    });
+  },
+  methods: {
+    onContextMenu(e) {
+      console.log(e.latlng)
     },
-    methods: {
-      zoomUpdated(zoom) {
-        this.zoom = zoom;
-      },
-      centerUpdated(center) {
-        this.center = center;
-      },
-      boundsUpdated(bounds) {
-        this.bounds = bounds;
-      }
-    }
-  }
+    zoomUpdated(zoom) {
+      this.zoom = zoom;
+    },
+    centerUpdated(center) {
+      this.center = center;
+    },
+    boundsUpdated(bounds) {
+      this.bounds = bounds;
+    },
+  },
+};
 </script>
