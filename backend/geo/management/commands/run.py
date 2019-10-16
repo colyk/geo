@@ -13,5 +13,6 @@ class Command(BaseCommand):
         build_dir = os.path.join(settings.BASE_DIR, 'dist')
         if os.path.isdir(build_dir):
             shutil.rmtree(build_dir)
+
         call_command('collectstatic')
         call_command('runserver')

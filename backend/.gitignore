@@ -2,3 +2,5 @@ db.sqlite3
 /dist
 
 **/__pycache__/
+
+geo/osm/cache

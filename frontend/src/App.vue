@@ -1,31 +1,31 @@
 <template>
-  <div id="app">
-    <!--<img alt="Vue logo" src="./assets/logo.png">-->
-    <div id="map">
-      <Map/>
-    </div>
-  </div>
+  <v-app id="app">
+      <PathBuilder />
+  </v-app>
 </template>
 
 <script>
-import Map from './components/Map.vue';
+import PathBuilder from './components/PathBuilder.vue';
 
 export default {
   name: 'app',
   components: {
-    Map,
+    PathBuilder,
   },
 };
 </script>
 
 <style>
+  @import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons');
+  * {
+    font-family: 'Roboto', sans-serif;
+  }
+  body {
+    overflow-y: hidden;
+  }
   #app {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  #map {
-    width: 800px;
-    height: 800px;
-  }
 </style>

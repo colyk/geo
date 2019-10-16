@@ -4,6 +4,7 @@ import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
 import { Icon } from 'leaflet';
 import App from './App.vue';
 import 'leaflet/dist/leaflet.css';
+import vuetify from './plugins/vuetify';
 
 Vue.component('l-map', LMap);
 Vue.component('l-tile-layer', LTileLayer);
@@ -20,5 +21,6 @@ Icon.Default.mergeOptions({
 Vue.config.productionTip = false;
 
 new Vue({
+  vuetify,
   render: h => h(App),
 }).$mount('#app');

@@ -1,0 +1,48 @@
+{
+    "elements": [
+        {
+            "id": 7224409,
+            "members": [
+                {
+                    "ref": 676244920,
+                    "role": "outer",
+                    "type": "way"
+                },
+                {
+                    "ref": 676244919,
+                    "role": "inner",
+                    "type": "way"
+                }
+            ],
+            "tags": {
+                "addr:city": "Lublin",
+                "addr:housenumber": "1",
+                "addr:postcode": "20-111",
+                "addr:street": "Plac W\u0142adys\u0142awa \u0141okietka",
+                "barrier": "sally_port",
+                "building": "yes",
+                "building:levels": "5",
+                "building:material": "brick",
+                "castle_type": "fortress",
+                "foot": "yes",
+                "historic": "castle",
+                "name": "Brama Krakowska",
+                "name:en": "Cracow Gate",
+                "roof:colour": "white",
+                "roof:shape": "dome",
+                "tourism": "attraction",
+                "type": "multipolygon",
+                "wikidata": "Q9663386",
+                "wikipedia": "pl:Brama Krakowska w Lublinie"
+            },
+            "type": "relation"
+        }
+    ],
+    "generator": "Overpass API 0.7.55.1009 5e627b63",
+    "osm3s": {
+        "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+        "timestamp_areas_base": "2019-10-16T19:22:02Z",
+        "timestamp_osm_base": "2019-10-16T21:55:02Z"
+    },
+    "version": 0.6000000000000001
+}

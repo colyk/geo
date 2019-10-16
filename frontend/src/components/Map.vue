@@ -1,13 +1,7 @@
 <template>
   <div style="height: 100%; width: 100%">
-    <div class="info" style="height: 15%">
-      <span>Center: {{ center }}</span>
-      <span>Zoom: {{ zoom }}</span>
-      <span>Bounds: {{ bounds }}</span>
-    </div>
     <l-map
       @contextmenu="onContextMenu"
-      style="height: 80%; width: 100%"
       :zoom="zoom"
       :center="center"
       @update:zoom="zoomUpdated"
@@ -26,6 +20,7 @@
 import { getCurrentPosition } from '../utils';
 
 export default {
+  name: 'Map',
   data() {
     return {
       // https://wiki.openstreetmap.org/wiki/Tile_servers
@@ -33,18 +28,18 @@ export default {
       zoom: 11,
       center: [47.413220, -1.219482],
       bounds: null,
-      markerLatLng: null
+      markerLatLng: null,
     };
   },
   mounted() {
-    getCurrentPosition().then(({coords}) => {
+    getCurrentPosition().then(({ coords }) => {
       this.center = [coords.latitude, coords.longitude];
       this.markerLatLng = this.center;
     });
   },
   methods: {
     onContextMenu(e) {
-      console.log(e.latlng)
+      console.log(e.latlng);
     },
     zoomUpdated(zoom) {
       this.zoom = zoom;
