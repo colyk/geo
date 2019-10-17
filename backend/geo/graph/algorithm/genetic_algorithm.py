@@ -67,8 +67,8 @@ def rankRoutes(population):
 def selection(popRanked, eliteSize):
     selectionResults = []
     df = pd.DataFrame(np.array(popRanked), columns=["Index", "Fitness"])
-    df['cum_sum'] = df.Fitness.cumsum()
-    df['cum_perc'] = 100 * df.cum_sum / df.Fitness.sum()
+    df["cum_sum"] = df.Fitness.cumsum()
+    df["cum_perc"] = 100 * df.cum_sum / df.Fitness.sum()
 
     for i in range(0, eliteSize):
         selectionResults.append(popRanked[i][0])
@@ -122,7 +122,7 @@ def breedPopulation(matingpool, eliteSize):
 
 def mutate(individual, mutationRate):
     for swapped in range(len(individual)):
-        if (random.random() < mutationRate):
+        if random.random() < mutationRate:
             swapWith = int(random.random() * len(individual))
 
             city1 = individual[swapped]
@@ -174,19 +174,31 @@ def geneticAlgorithmPlot(population, popSize, eliteSize, mutationRate, generatio
         progress.append(1 / rankRoutes(pop)[0][1])
 
     plt.plot(progress)
-    plt.ylabel('Distance')
-    plt.xlabel('Generation')
+    plt.ylabel("Distance")
+    plt.xlabel("Generation")
     plt.show()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     cityList = []
 
     for i in range(0, 25):
-        cityList.append(City(x=int(random.random() * 200), y=int(random.random() * 200)))
-    geneticAlgorithm(population=cityList, popSize=100, eliteSize=20, mutationRate=0.01,
-                     generations=500)
+        cityList.append(
+            City(x=int(random.random() * 200), y=int(random.random() * 200))
+        )
+    geneticAlgorithm(
+        population=cityList,
+        popSize=100,
+        eliteSize=20,
+        mutationRate=0.01,
+        generations=500,
+    )
 
-    geneticAlgorithmPlot(population=cityList, popSize=100, eliteSize=20, mutationRate=0.01,
-                         generations=500)
+    geneticAlgorithmPlot(
+        population=cityList,
+        popSize=100,
+        eliteSize=20,
+        mutationRate=0.01,
+        generations=500,
+    )

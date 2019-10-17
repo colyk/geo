@@ -12,7 +12,7 @@ class Node:
         return math.sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
 
     def __repr__(self):
-        return 'name: {}, x: {}, y: {}'.format(self.name, self.x, self.y)
+        return "name: {}, x: {}, y: {}".format(self.name, self.x, self.y)
 
 
 class Edge:
@@ -23,7 +23,9 @@ class Edge:
         self.weight = source + target
 
     def __repr__(self):
-        return '{} - {}, weight: {}'.format(self.source.name, self.target.name, self.weight)
+        return "{} - {}, weight: {}".format(
+            self.source.name, self.target.name, self.weight
+        )
 
 
 class Graph:
@@ -50,15 +52,15 @@ class Graph:
         return self.has_node(edge.source) and self.has_node(edge.target)
 
     def __str__(self):
-        nodes = 'Nodes:\n' + '\n'.join([str(node) for node in self.nodes])
-        edges = '\nEdges:\n' + '\n'.join([str(edge) for edge in self.edges])
+        nodes = "Nodes:\n" + "\n".join([str(node) for node in self.nodes])
+        edges = "\nEdges:\n" + "\n".join([str(edge) for edge in self.edges])
         return nodes + edges
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     g = Graph()
-    lublin = Node('Lublin')
-    warsaw = Node('Warsaw', (10, 10))
+    lublin = Node("Lublin")
+    warsaw = Node("Warsaw", (10, 10))
 
     w_l_edge = Edge(warsaw, lublin)
     g.add_nodes([warsaw, lublin])

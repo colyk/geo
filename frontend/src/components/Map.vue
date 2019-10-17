@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%; width: 100%">
+  <v-app >
     <l-map
       @contextmenu="onContextMenu"
       :zoom="zoom"
@@ -10,10 +10,21 @@
     >
       <l-tile-layer :url="url"></l-tile-layer>
       <l-marker v-if="markerLatLng" :lat-lng="markerLatLng" ></l-marker>
+      <l-circle
+        v-if="circlesCoords.length"
+        v-for="(coord, id) in circlesCoords"
+        :key="id"
+        :lat-lng="coord"
+        :radius="450"
+        color="red"
+      />
+      <l-polyline
+        v-if="lineCoords.length"
+        :lat-lngs="lineCoords"
+        color="green">
+      </l-polyline>
     </l-map>
-  </div>
-
-
+  </v-app>
 </template>
 
 <script>
@@ -21,9 +32,14 @@ import { getCurrentPosition } from '../utils';
 
 export default {
   name: 'Map',
+  props: {
+    circlesCoords: { type: Array, default: () => [] },
+    lineCoords: { type: Array, default: () => [] },
+  },
   data() {
     return {
       // https://wiki.openstreetmap.org/wiki/Tile_servers
+      // https://maps.wikimedia.org/osm-intl/${z}/${x}/${y}.png
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       zoom: 11,
       center: [47.413220, -1.219482],
@@ -39,7 +55,8 @@ export default {
   },
   methods: {
     onContextMenu(e) {
-      console.log(e.latlng);
+      this.$emit('right-click', e.latlng);
+      console.log(this.lineCoords);
     },
     zoomUpdated(zoom) {
       this.zoom = zoom;

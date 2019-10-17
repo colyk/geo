@@ -19,35 +19,43 @@ def choose_relation(area, type):
     obj = {}
     # print(json.dumps(area_json, indent=4, sort_keys=True))
     for obj in area_json:
-        if obj['osm_type'] == 'relation':
-            print('Are you looking for', obj['display_name'] + ',', obj['type'] + ',', obj['osm_id'], '? - :')
+        if obj["osm_type"] == "relation":
+            print(
+                "Are you looking for",
+                obj["display_name"] + ",",
+                obj["type"] + ",",
+                obj["osm_id"],
+                "? - :",
+            )
             answer = input()
-            if answer is 'y':
+            if answer is "y":
                 break
         else:
             break
     if answer is None:
         print("Nothing found")
         return None
-    if answer is not 'y':
+    if answer is not "y":
         print("There is no other areas")
         return None
-    relation = api.query("relation/" + str(obj['osm_id'])).tags()
+    relation = api.query("relation/" + str(obj["osm_id"])).tags()
     selector = type_to_selector(type)
     if selector is None:
         print("Wrong place type")
         return None
-    return {'rel': relation, 'sel': selector}
+    return {"rel": relation, "sel": selector}
 
 
 def fetch_data_by_relation(relation, selector, element_type):
-    query = overpassQueryBuilder(area='REPLACE_TEXT', elementType=element_type, selector=selector, out='')
-    query = query.replace('(REPLACE_TEXT)', build_area_selector(relation))
+    query = overpassQueryBuilder(
+        area="REPLACE_TEXT", elementType=element_type, selector=selector, out=""
+    )
+    query = query.replace("(REPLACE_TEXT)", build_area_selector(relation))
     return overpass.query(query, timeout=60).toJSON()
 
 
 def build_area_selector(relation):
-    area_selector = ''
+    area_selector = ""
     for obj in relation:
         area_selector += '["' + obj + '"="' + relation[obj] + '"]'
     return area_selector
@@ -76,11 +84,11 @@ def type_to_selector(type_):
     return type_selector_map.get(type_, None)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     fetch_pack = choose_relation("Lublin", "attraction")
-    data = fetch_data_by_relation(fetch_pack['rel'], fetch_pack['sel'], 'relation')
+    data = fetch_data_by_relation(fetch_pack["rel"], fetch_pack["sel"], "relation")
     r = json.dumps(data, indent=4, sort_keys=True)
     print(r)
 
-    with open('data.json', 'w', encoding='utf-8') as f:
+    with open("data.json", "w", encoding="utf-8") as f:
         f.write(r)

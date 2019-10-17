@@ -1,24 +1,48 @@
 <template>
-<v-card height="100%">
-    <Map width="80%"/>
-
-    <v-navigation-drawer
-      absolute
-      permanent
-      right
-      :clipped="true"
-    >
-      <template v-slot:prepend>
-        Added points:
-      </template>
-
-      <v-divider></v-divider>
-
-      <v-list dense>
-
-      </v-list>
-    </v-navigation-drawer>
-  </v-card>
+<v-app>
+    <v-container class="grey lighten-5" fluid>
+      <v-row no-gutters>
+        <v-col
+          cols="1"
+          sm="10"
+        >
+          <v-card
+            outlined
+            tile
+          >
+            <Map
+              v-on:right-click="onRightClick"
+              :circlesCoords="selectedPoints"
+              :lineCoords="selectedPoints"
+            />
+          </v-card>
+        </v-col>
+        <v-col
+          cols="2"
+          sm="2"
+        >
+          <v-card
+            outlined
+            tile
+          >
+            Selected points:
+            <v-list dense>
+              <v-list-item
+                v-for="(point, index) in selectedPoints"
+                :key="index"
+                @click=""
+              >
+                <v-list-item-content>
+                  <v-list-item-title>Lat: {{ point[0] }}</v-list-item-title>
+                  <v-list-item-title>Lng: {{ point[1] }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+</v-app>
 </template>
 
 <script>
@@ -27,16 +51,19 @@ import Map from './Map.vue';
 
 
 export default {
-name: 'PathBuilder',
+  name: 'PathBuilder',
   components: {
     Map,
   },
   data() {
     return {
-
+      selectedPoints: [],
     };
   },
   methods: {
+    onRightClick({ lat, lng }) {
+      this.selectedPoints.push([lat, lng]);
+    },
 
   },
 };
