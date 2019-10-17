@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -47,6 +48,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
 
 ROOT_URLCONF = "backend.urls"
@@ -120,3 +123,5 @@ STATICFILES_DIRS = [
     os.path.join(os.path.dirname(BASE_DIR), "frontend", "dist", "css"),
     os.path.join(os.path.dirname(BASE_DIR), "frontend", "dist", "js"),
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True

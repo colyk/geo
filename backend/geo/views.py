@@ -1,5 +1,8 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
+from django.views.generic.base import View
 
 
-def index(request):
-    return JsonResponse({"1": 1})
+class Path(View):
+    def get(self, request):
+        print(request)
+        return JsonResponse({})

@@ -48,7 +48,7 @@
 <script>
 
 import Map from './Map.vue';
-
+import { get_path } from '../Requests.js';
 
 export default {
   name: 'PathBuilder',
@@ -63,6 +63,11 @@ export default {
   methods: {
     onRightClick({ lat, lng }) {
       this.selectedPoints.push([lat, lng]);
+      if (this.selectedPoints.length > 1) {
+        get_path()
+          .then((result) => { console.log(result); })
+          .catch((e) => { console.log(e); });
+      }
     },
 
   },

@@ -4,6 +4,8 @@
       @contextmenu="onContextMenu"
       :zoom="zoom"
       :center="center"
+      :zoomAnimation="true"
+      :markerZoomAnimation="true"
       @update:zoom="zoomUpdated"
       @update:center="centerUpdated"
       @update:bounds="boundsUpdated"
@@ -15,7 +17,7 @@
         v-for="(coord, id) in circlesCoords"
         :key="id"
         :lat-lng="coord"
-        :radius="450"
+        :radius="circleRadius"
         color="red"
       />
       <l-polyline
@@ -42,6 +44,7 @@ export default {
       // https://maps.wikimedia.org/osm-intl/${z}/${x}/${y}.png
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       zoom: 11,
+      circleRadius: 400,
       center: [47.413220, -1.219482],
       bounds: null,
       markerLatLng: null,
@@ -59,7 +62,7 @@ export default {
       console.log(this.lineCoords);
     },
     zoomUpdated(zoom) {
-      this.zoom = zoom;
+      this.zoom = zoom; // from 0 to 18
     },
     centerUpdated(center) {
       this.center = center;
