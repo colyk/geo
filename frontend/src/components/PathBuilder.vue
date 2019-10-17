@@ -64,7 +64,7 @@ export default {
     onRightClick({ lat, lng }) {
       this.selectedPoints.push([lat, lng]);
       if (this.selectedPoints.length > 1) {
-        get_path()
+        get_path(this.selectedPoints)
           .then((result) => { console.log(result); })
           .catch((e) => { console.log(e); });
       }
