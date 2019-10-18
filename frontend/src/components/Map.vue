@@ -18,19 +18,18 @@
         :key="id"
         :lat-lng="coord"
         :radius="circleRadius"
-        color="red"
+        color="#eb346bcc"
       />
       <l-polyline
         v-if="lineCoords.length"
         :lat-lngs="lineCoords"
-        color="green">
+        color="#55eb34cc">
       </l-polyline>
       <l-control position="bottomleft" >
-       <v-btn small id="show_loc" @click="showCurLoc">
-          My location
-       </v-btn>
+       <v-btn small id="show_loc" @click="showCurLoc">My location</v-btn>
      </l-control>
       <v-geosearch :options="geosearchOptions" ></v-geosearch>
+      <l-control-polyline-measure :options="{ showUnitControl: false }" position="bottomright"/>
     </l-map>
   </v-app>
 </template>

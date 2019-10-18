@@ -3,6 +3,7 @@ import Vue from 'vue';
 import {
   LMap, LTileLayer, LMarker, LCircle, LPolyline, LControl,
 } from 'vue2-leaflet';
+import LControlPolylineMeasure from 'vue2-leaflet-polyline-measure';
 import { Icon } from 'leaflet';
 import App from './App.vue';
 import 'leaflet/dist/leaflet.css';
@@ -14,6 +15,7 @@ Vue.component('l-marker', LMarker);
 Vue.component('l-circle', LCircle);
 Vue.component('l-polyline', LPolyline);
 Vue.component('l-control', LControl);
+Vue.component('l-control-polyline-measure', LControlPolylineMeasure);
 
 delete Icon.Default.prototype._getIconUrl;
 

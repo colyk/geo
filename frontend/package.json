@@ -16,6 +16,7 @@
     "vue": "^2.6.10",
     "vue2-leaflet": "^2.2.1",
     "vue2-leaflet-geosearch": "^1.0.6",
+    "vue2-leaflet-polyline-measure": "^1.0.0",
     "vuetify": "^2.1.4"
   },
   "devDependencies": {
