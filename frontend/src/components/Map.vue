@@ -51,9 +51,9 @@ export default {
     return {
       // https://wiki.openstreetmap.org/wiki/Tile_servers
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-      zoom: 11,
+      zoom: 12,
       circleRadius: 400,
-      center: [47.413220, -1.219482],
+      center: [51.2477870, 22.570132],
       bounds: null,
       markerLatLng: null,
       geosearchOptions: {
