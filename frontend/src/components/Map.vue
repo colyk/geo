@@ -25,15 +25,19 @@
         :lat-lngs="lineCoords"
         color="green">
       </l-polyline>
+      <v-geosearch :options="geosearchOptions" ></v-geosearch>
     </l-map>
   </v-app>
 </template>
 
 <script>
 import { getCurrentPosition } from '../utils';
+import { OpenStreetMapProvider } from 'leaflet-geosearch';
+import VGeosearch from 'vue2-leaflet-geosearch';
 
 export default {
   name: 'Map',
+  components: { VGeosearch },
   props: {
     circlesCoords: { type: Array, default: () => [] },
     lineCoords: { type: Array, default: () => [] },
@@ -41,13 +45,17 @@ export default {
   data() {
     return {
       // https://wiki.openstreetmap.org/wiki/Tile_servers
-      // https://maps.wikimedia.org/osm-intl/${z}/${x}/${y}.png
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       zoom: 11,
       circleRadius: 400,
       center: [47.413220, -1.219482],
       bounds: null,
       markerLatLng: null,
+      geosearchOptions: {
+        provider: new OpenStreetMapProvider(),
+        // autoClose: true,
+        showPopup: true,
+      },
     };
   },
   mounted() {
@@ -59,10 +67,10 @@ export default {
   methods: {
     onContextMenu(e) {
       this.$emit('right-click', e.latlng);
-      console.log(this.lineCoords);
     },
     zoomUpdated(zoom) {
       this.zoom = zoom; // from 0 to 18
+      this.circleRadius = 1145 - (this.zoom + 1) * 60;
     },
     centerUpdated(center) {
       this.center = center;

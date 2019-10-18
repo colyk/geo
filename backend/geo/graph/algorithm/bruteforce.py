@@ -1,5 +1,12 @@
 routes = []
 
+def build_path(graph):
+    global routes
+    routes = []
+    find_paths(0, graph, [], 0)
+
+    routes.sort()
+    return routes[0]
 
 def find_paths(node, cities, path, distance):
     # Add way point
@@ -15,7 +22,6 @@ def find_paths(node, cities, path, distance):
         global routes
         path.append(path[0])
         distance += cities[path[-2]][path[0]]
-        print(path, distance)
         routes.append([distance, path])
         return
 

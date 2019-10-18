@@ -42,14 +42,34 @@ class Graph:
             self.add_node(node)
 
     def add_edge(self, edge):
-        if self.is_possible_edge(edge):
+        if self.is_possible_edge(edge) and edge not in self.edges:
             self.edges.append(edge)
+
+    def add_edges(self, edges):
+        for edge in edges:
+            self.add_edge(edge)
 
     def has_node(self, node):
         return node in self.nodes
 
     def is_possible_edge(self, edge):
         return self.has_node(edge.source) and self.has_node(edge.target)
+
+    def json(self):
+        r = {}
+
+        for node in self.nodes:
+            r[node.name] = {}
+            for edge in self.edges:
+                if edge.source.name == node.name:
+                    r[node.name][edge.target.name] = edge.weight
+                if edge.target.name == node.name:
+                    r[node.name][edge.source.name] = edge.weight
+
+
+        return r
+
+
 
     def __str__(self):
         nodes = "Nodes:\n" + "\n".join([str(node) for node in self.nodes])

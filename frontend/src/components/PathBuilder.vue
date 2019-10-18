@@ -13,7 +13,7 @@
             <Map
               v-on:right-click="onRightClick"
               :circlesCoords="selectedPoints"
-              :lineCoords="selectedPoints"
+              :lineCoords="lineCoords"
             />
           </v-card>
         </v-col>
@@ -49,6 +49,7 @@
 
 import Map from './Map.vue';
 import { get_path } from '../Requests.js';
+import {hasCoords} from "../utils";
 
 export default {
   name: 'PathBuilder',
@@ -58,14 +59,20 @@ export default {
   data() {
     return {
       selectedPoints: [],
+      lineCoords: [],
     };
   },
   methods: {
     onRightClick({ lat, lng }) {
-      this.selectedPoints.push([lat, lng]);
-      if (this.selectedPoints.length > 1) {
+      if (!hasCoords(this.selectedPoints, [lat, lng])) {
+        this.selectedPoints.push([lat, lng]);
+
+      if (this.selectedPoints.length > 1)
         get_path(this.selectedPoints)
-          .then((result) => { console.log(result); })
+          .then((result) => {
+            console.log(result.data);
+            this.lineCoords = result.data.path;
+          })
           .catch((e) => { console.log(e); });
       }
     },
