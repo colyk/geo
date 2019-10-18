@@ -49,7 +49,7 @@
 
 import Map from './Map.vue';
 import { get_path } from '../Requests.js';
-import {hasCoords} from "../utils";
+import { hasCoords } from '../utils';
 
 export default {
   name: 'PathBuilder',
@@ -67,13 +67,14 @@ export default {
       if (!hasCoords(this.selectedPoints, [lat, lng])) {
         this.selectedPoints.push([lat, lng]);
 
-      if (this.selectedPoints.length > 1)
-        get_path(this.selectedPoints)
-          .then((result) => {
-            console.log(result.data);
-            this.lineCoords = result.data.path;
-          })
-          .catch((e) => { console.log(e); });
+        if (this.selectedPoints.length > 1) {
+          get_path(this.selectedPoints)
+            .then((result) => {
+              console.log(result.data);
+              this.lineCoords = result.data.path;
+            })
+            .catch((e) => { console.log(e); });
+        }
       }
     },
 

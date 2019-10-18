@@ -25,15 +25,20 @@
         :lat-lngs="lineCoords"
         color="green">
       </l-polyline>
+      <l-control position="bottomleft" >
+       <v-btn small id="show_loc" @click="showCurLoc">
+          My location
+       </v-btn>
+     </l-control>
       <v-geosearch :options="geosearchOptions" ></v-geosearch>
     </l-map>
   </v-app>
 </template>
 
 <script>
-import { getCurrentPosition } from '../utils';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import VGeosearch from 'vue2-leaflet-geosearch';
+import { getCurrentPosition } from '../utils';
 
 export default {
   name: 'Map',
@@ -58,13 +63,16 @@ export default {
       },
     };
   },
-  mounted() {
-    getCurrentPosition().then(({ coords }) => {
-      this.center = [coords.latitude, coords.longitude];
-      this.markerLatLng = this.center;
-    });
-  },
+  mounted() {},
   methods: {
+    showCurLoc(e) {
+      getCurrentPosition().then(({ coords }) => {
+        this.center = [coords.latitude, coords.longitude];
+        this.zoom = 11;
+        this.markerLatLng = this.center;
+        console.log(this.center);
+      });
+    },
     onContextMenu(e) {
       this.$emit('right-click', e.latlng);
     },
@@ -81,3 +89,10 @@ export default {
   },
 };
 </script>
+
+<style>
+  #show_loc {
+    background-color: #fff;
+    text-transform: capitalize;
+  }
+</style>

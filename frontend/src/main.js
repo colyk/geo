@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
 import {
-  LMap, LTileLayer, LMarker, LCircle, LPolyline,
+  LMap, LTileLayer, LMarker, LCircle, LPolyline, LControl,
 } from 'vue2-leaflet';
 import { Icon } from 'leaflet';
 import App from './App.vue';
@@ -13,6 +13,7 @@ Vue.component('l-tile-layer', LTileLayer);
 Vue.component('l-marker', LMarker);
 Vue.component('l-circle', LCircle);
 Vue.component('l-polyline', LPolyline);
+Vue.component('l-control', LControl);
 
 delete Icon.Default.prototype._getIconUrl;
 

@@ -2,7 +2,7 @@ from .graph import Graph, Node, Edge
 
 
 def create_graph_from_geo(data):
-    points = data['points']
+    points = data["points"]
     g = Graph()
     nodes = []
     edges = []
