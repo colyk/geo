@@ -30,7 +30,7 @@
               <v-list-item
                 v-for="(point, index) in selectedPoints"
                 :key="index"
-                @click=""
+                @contextmenu.prevent="$refs.menu.open($event, {point, index})"
               >
                 <v-list-item-content>
                   <v-list-item-title>Lat: {{ point[0] }}</v-list-item-title>
@@ -39,6 +39,15 @@
               </v-list-item>
             </v-list>
           </v-card>
+        <vue-context ref="menu" @close="onClose" @open="onOpen">
+          <v-list dense>
+            <v-list-item @click.prevent="onClick('remove')">
+              <v-list-item-content>
+                Remove
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </vue-context>
         </v-col>
       </v-row>
     </v-container>
@@ -47,37 +56,57 @@
 
 <script>
 
+import { VueContext } from 'vue-context';
 import Map from './Map.vue';
-import { get_path } from '../Requests.js';
+import { fetchPath } from '../Requests';
 import { hasCoords } from '../utils';
 
 export default {
   name: 'PathBuilder',
   components: {
     Map,
+    VueContext,
   },
   data() {
     return {
       selectedPoints: [],
       lineCoords: [],
+      clickedOnPoint: null,
     };
   },
   methods: {
+    onClick(type) {
+      if (type === 'remove') {
+        this.selectedPoints.splice(this.clickedOnPoint.index, 1);
+        this.lineCoords = [];
+        this.requestPath();
+      }
+    },
+    onOpen(e, data) {
+      this.clickedOnPoint = data;
+    },
+    onClose(data) {
+    },
     onRightClick({ lat, lng }) {
       if (!hasCoords(this.selectedPoints, [lat, lng])) {
         this.selectedPoints.push([lat, lng]);
-
-        if (this.selectedPoints.length > 1) {
-          get_path(this.selectedPoints)
-            .then((result) => {
-              console.log(result.data);
-              this.lineCoords = result.data.path;
-            })
-            .catch((e) => { console.log(e); });
-        }
+        this.requestPath();
+      }
+    },
+    requestPath() {
+      if (this.selectedPoints.length > 1) {
+        fetchPath(this.selectedPoints)
+          .then((result) => {
+            this.lineCoords = result.data.path;
+          })
+          .catch((e) => { console.log(e); });
       }
     },
 
   },
 };
 </script>
+
+<style>
+.v-context { padding:0!important;}
+</style>

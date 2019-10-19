@@ -1,10 +1,19 @@
 # backend
-* Install dependencies
+## Install dependencies
 ```
 pip install -r requirements.txt
 ```
+## Run tests
+```python
+python manage.py test
+```
 
-* Run server
+## Run server
+```python
+python manage.py runserver 0.0.0.0:8000
+```
+
+### Collect static and run server
 ```python
 python manage.py run
 ```
