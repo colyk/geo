@@ -28,7 +28,7 @@ class Edge:
     __slots__ = ["edge", "weight"]
 
     def __init__(self, source, target):
-        self.edge = {source, target}
+        self.edge = frozenset([source, target])
         self.weight = source + target
 
 
@@ -63,6 +63,14 @@ class Graph:
 
     def has_edge(self, edge: Edge) -> bool:
         return any(filter(lambda e: e.edge == edge.edge, self.edges))
+
+    def get_connected_nodes(self, node: Node) -> List[Node]:
+        conn_nodes = []
+        for edge in self.edges:
+            edge_d = edge.edge.difference({node})
+            if len(edge_d) == 1:
+                conn_nodes.append(list(edge_d)[0])
+        return conn_nodes
 
     def json(self) -> dict:
         r = {}
