@@ -1,11 +1,11 @@
 import math
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 
 class Node:
     __slots__ = ["name", "x", "y"]
 
-    def __init__(self, name: str, cords: Tuple[float, float]):
+    def __init__(self, name: Union[str, int], cords: Tuple[float, float]):
         self.name = name
         self.x, self.y = cords
 
@@ -48,7 +48,7 @@ class Graph:
             self.add_node(node)
 
     def add_edge(self, edge: Edge):
-        if self.is_possible_edge(edge) and edge not in self.edges:
+        if self.is_possible_edge(edge) and not self.has_edge(edge):
             self.edges.add(edge)
 
     def add_edges(self, edges: List[Edge]):
@@ -56,10 +56,13 @@ class Graph:
             self.add_edge(edge)
 
     def has_node(self, node: Node) -> bool:
-        return node in self.nodes
+        return any(filter(lambda n: n == node, self.nodes))
 
     def is_possible_edge(self, edge: Edge) -> bool:
         return edge.edge.issubset(self.nodes)
+
+    def has_edge(self, edge: Edge) -> bool:
+        return any(filter(lambda e: e.edge == edge.edge, self.edges))
 
     def json(self) -> dict:
         r = {}

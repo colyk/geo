@@ -1,21 +1,17 @@
+from itertools import combinations
+from typing import List
+
 from .graph import Graph, Node, Edge
 
 
-def create_graph_from_geo(data):
-    points = data["points"]
+def create_graph_from_geo_data(points: List) -> Graph:
     g = Graph()
-    nodes = []
-    edges = []
 
     for idx, point in enumerate(points):
-        nodes.append(Node(idx, point))
+        g.add_node(Node(idx, point))
 
-    for i in range(0, len(nodes)):
-        for j in range(0, len(nodes)):
-            if i != j:
-                edges.append(Edge(nodes[i], nodes[j]))
-
-    g.add_nodes(nodes)
+    edges_combinations = list(combinations(g.nodes, 2))
+    edges = [Edge(node1, node2) for node1, node2 in edges_combinations]
     g.add_edges(edges)
 
     return g
