@@ -15,3 +15,5 @@ def create_graph_from_geo_data(points: List) -> Graph:
     g.add_edges(edges)
 
     return g
+
+# TODO: geojson to graph with ijson

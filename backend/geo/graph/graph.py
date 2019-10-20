@@ -1,11 +1,23 @@
 import math
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, Dict
+
+"""
+    Todo:
+    Draw graph function
+    Graph to matrix
+"""
 
 
 class Node:
-    __slots__ = ["name", "x", "y"]
+    __slots__ = ["name", "meta", "x", "y"]
 
-    def __init__(self, name: Union[str, int], cords: Tuple[float, float]):
+    def __init__(
+            self,
+            name: Union[str, int],
+            cords: Tuple[float, float],
+            meta: Union[Dict, None] = None,
+    ):
+        self.meta = meta
         self.name = name
         self.x, self.y = cords
 
@@ -67,9 +79,10 @@ class Graph:
     def get_connected_nodes(self, node: Node) -> List[Node]:
         conn_nodes = []
         for edge in self.edges:
-            edge_d = edge.edge.difference({node})
-            if len(edge_d) == 1:
-                conn_nodes.append(list(edge_d)[0])
+            edge_difference = edge.edge - {node}
+            if len(edge_difference) == 1:
+                conn_node, = edge_difference
+                conn_nodes.append(conn_node)
         return conn_nodes
 
     def json(self) -> dict:
@@ -78,9 +91,10 @@ class Graph:
         for node in self.nodes:
             r[node.name] = {}
             for edge in self.edges:
-                edge_d = edge.edge.difference({node})
-                if len(edge_d) == 1:
-                    r[node.name][list(edge_d)[0].name] = edge.weight
+                edge_difference = edge.edge - {node}
+                if len(edge_difference) == 1:
+                    conn_node, = edge_difference
+                    r[node.name][conn_node.name] = edge.weight
         return r
 
     def __str__(self):

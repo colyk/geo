@@ -78,3 +78,14 @@ class GraphCase(TestCase):
 
         c_nodes = self.g.get_connected_nodes(self.node3)
         self.assertEqual(len(c_nodes), 2)
+
+    def test_graph_to_json(self):
+        self.g.add_nodes([self.node1, self.node2, self.node3])
+        self.g.add_edges([self.edge1, self.edge2, self.edge3])
+
+        json = self.g.json()
+        self.assertEqual(len(json.keys()), 3)
+        self.assertEqual(len(json[1]), 2)
+        self.assertEqual(len(json[2]), 2)
+        self.assertEqual(len(json[3]), 2)
+
