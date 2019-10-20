@@ -5,7 +5,6 @@ from ..graph import Node, Edge, Graph
 
 
 class DijkstraCase(TestCase):
-
     def test_dijkstra_algorithm(self):
         g = Graph()
 
@@ -38,6 +37,3 @@ class DijkstraCase(TestCase):
 
         path = dijsktra(g, node1, node3)
         self.assertIsNone(path)
-
-
-

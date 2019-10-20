@@ -88,4 +88,3 @@ class GraphCase(TestCase):
         self.assertEqual(len(json[1]), 2)
         self.assertEqual(len(json[2]), 2)
         self.assertEqual(len(json[3]), 2)
-

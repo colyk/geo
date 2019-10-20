@@ -1,10 +1,11 @@
 import math
-from typing import List, Tuple, Union, Dict
+from pprint import pprint
+from typing import List, Tuple, Union, Dict, Any
 
 """
     Todo:
     Draw graph function
-    Graph to matrix
+    Graph to adjacency matrix
 """
 
 
@@ -12,10 +13,10 @@ class Node:
     __slots__ = ["name", "meta", "x", "y"]
 
     def __init__(
-            self,
-            name: Union[str, int],
-            cords: Tuple[float, float],
-            meta: Union[Dict, None] = None,
+        self,
+        name: Union[str, int],
+        cords: Tuple[float, float],
+        meta: Union[Dict, None] = None,
     ):
         self.meta = meta
         self.name = name
@@ -33,15 +34,25 @@ class Node:
         return "name: {}, x: {}, y: {}".format(self.name, self.x, self.y)
 
     def __hash__(self):
-        return id(self)
+        return hash(repr(self))
 
 
 class Edge:
     __slots__ = ["edge", "weight"]
 
-    def __init__(self, source, target):
-        self.edge = frozenset([source, target])
-        self.weight = source + target
+    def __init__(self, f_node: Node, s_node: Node):
+        self.edge = frozenset([f_node, s_node])
+        self.weight = f_node + s_node
+
+    def __eq__(self, other):
+        return self.edge == other.edge
+
+    def __repr__(self):
+        f_node, s_node = self.edge
+        return "{} {} - weight: {}".format(f_node, s_node, self.weight)
+
+    def __hash__(self):
+        return hash(repr(self))
 
 
 class Graph:
@@ -85,21 +96,22 @@ class Graph:
                 conn_nodes.append(conn_node)
         return conn_nodes
 
-    def json(self) -> dict:
-        r = {}
+    def json(self) -> Dict[Any, Dict]:
+        json = {}
 
         for node in self.nodes:
-            r[node.name] = {}
+            json[node.name] = {}
             for edge in self.edges:
                 edge_difference = edge.edge - {node}
                 if len(edge_difference) == 1:
                     conn_node, = edge_difference
-                    r[node.name][conn_node.name] = edge.weight
-        return r
+                    json[node.name][conn_node.name] = edge.weight
+        return json
 
-    def __str__(self):
+    def __repr__(self):
         nodes = "Nodes:\n" + "\n".join([str(node) for node in self.nodes])
-        return nodes
+        edges = "\nEdges:\n" + "\n".join([str(edge) for edge in self.edges])
+        return nodes + edges
 
 
 if __name__ == "__main__":
@@ -112,4 +124,4 @@ if __name__ == "__main__":
     g.add_edge(w_l_edge)
 
     print(g)
-    print(g.json())
+    pprint(g.json())
