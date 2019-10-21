@@ -14,6 +14,7 @@
               v-on:right-click="onRightClick"
               :circlesCoords="selectedPoints"
               :lineCoords="lineCoords"
+              :geojson="geojson"
             />
           </v-card>
         </v-col>
@@ -72,6 +73,7 @@ export default {
       selectedPoints: [],
       lineCoords: [],
       clickedOnPoint: null,
+      geojson: null,
     };
   },
   methods: {

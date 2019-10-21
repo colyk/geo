@@ -1,3 +1,5 @@
+requests
+overpass
 appdirs==1.4.3
 attrs==19.3.0
 beautifulsoup4==4.8.1

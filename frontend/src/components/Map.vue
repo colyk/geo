@@ -30,6 +30,10 @@
      </l-control>
       <v-geosearch :options="geosearchOptions" ></v-geosearch>
       <l-control-polyline-measure :options="{ showUnitControl: false }" position="bottomright"/>
+      <l-geo-json
+        :geojson="geojson"
+      >
+      </l-geo-json>
     </l-map>
   </v-app>
 </template>
@@ -45,6 +49,7 @@ export default {
   props: {
     circlesCoords: { type: Array, default: () => [] },
     lineCoords: { type: Array, default: () => [] },
+    geojson: { type: Array, default: () => [] },
   },
   data() {
     return {
