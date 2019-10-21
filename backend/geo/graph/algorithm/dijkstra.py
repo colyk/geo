@@ -4,7 +4,7 @@ from typing import Union, List
 from ..graph import Graph, Node, Edge
 
 
-def dijsktra(graph: Graph, initial: Node, end: Node) -> Union[List[Node], None]:
+def dijkstra(graph: Graph, initial: Node, end: Node) -> Union[List[Node], None]:
     shortest_paths = {initial: (None, 0)}
     current_node = initial
     visited_nodes = set()
@@ -54,6 +54,6 @@ if __name__ == "__main__":
     edge2 = Edge(node2, node3)
     g.add_edges([edge1, edge2])
 
-    r = dijsktra(g, node1, node3)
+    r = dijkstra(g, node1, node3)
 
     pprint(r)

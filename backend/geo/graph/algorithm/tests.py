@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from .dijkstra import dijsktra
+from .dijkstra import dijkstra
 from ..graph import Node, Edge, Graph
 
 
@@ -17,7 +17,7 @@ class DijkstraCase(TestCase):
         edge2 = Edge(node2, node3)
         g.add_edges([edge1, edge2])
 
-        path = dijsktra(g, node1, node3)
+        path = dijkstra(g, node1, node3)
 
         self.assertEqual(len(path), 3)
         self.assertIs(path[0], node1)
@@ -35,5 +35,5 @@ class DijkstraCase(TestCase):
         edge1 = Edge(node1, node2)
         g.add_edge(edge1)
 
-        path = dijsktra(g, node1, node3)
+        path = dijkstra(g, node1, node3)
         self.assertIsNone(path)

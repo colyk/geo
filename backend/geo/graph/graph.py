@@ -1,4 +1,5 @@
 import math
+from decimal import Decimal, getcontext
 from pprint import pprint
 from typing import List, Tuple, Union, Dict, Any
 
@@ -7,6 +8,7 @@ from typing import List, Tuple, Union, Dict, Any
     Draw graph function
     Graph to adjacency matrix
 """
+getcontext().prec = 10
 
 
 class Node:
@@ -20,7 +22,9 @@ class Node:
     ):
         self.meta = meta
         self.name = name
-        self.x, self.y = cords
+        x, y = cords
+        self.x = Decimal(x)
+        self.y = Decimal(y)
 
     def __add__(self, other):
         """https://janakiev.com/blog/gps-points-distance-python/"""
@@ -31,7 +35,7 @@ class Node:
         return self.name == other.name and self.x == other.x and self.y == other.y
 
     def __repr__(self):
-        return "name: {}, x: {}, y: {}".format(self.name, self.x, self.y)
+        return "name: {}, x: {:.6f}, y: {:.6f}".format(self.name, self.x, self.y)
 
     def __hash__(self):
         return hash(repr(self))
@@ -49,7 +53,7 @@ class Edge:
 
     def __repr__(self):
         f_node, s_node = self.edge
-        return "{} {} - weight: {}".format(f_node, s_node, self.weight)
+        return "{} {} - weight: {:.6f}".format(f_node, s_node, self.weight)
 
     def __hash__(self):
         return hash(repr(self))
