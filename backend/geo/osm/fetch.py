@@ -1,94 +1,47 @@
 #!/usr/bin/env python3
 
-from OSMPythonTools.nominatim import Nominatim
-from OSMPythonTools.overpass import Overpass, overpassQueryBuilder
-from OSMPythonTools.data import Data, dictRangeYears, ALL
-from OSMPythonTools.api import Api
 import json
+import overpass
 
-from collections import OrderedDict
-
-nominatim = Nominatim()
-overpass = Overpass()
-api = Api()
+api = overpass.API()
 
 
-def choose_relation(area, type):
-    area_json = nominatim.query(area).toJSON()
-    answer = None
-    obj = {}
-    # print(json.dumps(area_json, indent=4, sort_keys=True))
-    for obj in area_json:
-        if obj["osm_type"] == "relation":
-            print(
-                "Are you looking for",
-                obj["display_name"] + ",",
-                obj["type"] + ",",
-                obj["osm_id"],
-                "? - :",
-            )
-            answer = input()
-            if answer is "y":
-                break
-        else:
-            break
-    if answer is None:
-        print("Nothing found")
-        return None
-    if answer is not "y":
-        print("There is no other areas")
-        return None
-    relation = api.query("relation/" + str(obj["osm_id"])).tags()
-    selector = type_to_selector(type)
+def fetch_data_by_id(area_id, ref_class, el_class, el_type, responseformat):
+    query = ref_class + '(' + str(area_id) + ');\nmap_to_area;\n' + el_class + '(area)'
+    selector = type_to_selector(el_type)
     if selector is None:
-        print("Wrong place type")
         return None
-    return {"rel": relation, "sel": selector}
+    query += selector + ';\n(._;>;);\nout;'
+    return api.get(query, responseformat=responseformat)
 
 
-def fetch_data_by_relation(relation, selector, element_type):
-    query = overpassQueryBuilder(
-        area="REPLACE_TEXT", elementType=element_type, selector=selector, out=""
-    )
-    query = query.replace("(REPLACE_TEXT)", build_area_selector(relation))
-    return overpass.query(query, timeout=60).toJSON()
-
-
-def build_area_selector(relation):
-    area_selector = ""
-    for obj in relation:
-        area_selector += '["' + obj + '"="' + relation[obj] + '"]'
-    return area_selector
-
-
-def type_to_selector(type_):
+def type_to_selector(el_type):
     type_selector_map = {
-        "attraction": '"tourism"="attraction"',
-        "museum": '"tourism"="museum"',
-        "theatre": '"amenity"="theatre"',
-        "restaurant": '"amenity"="restaurant"',
-        "mall": '"shop"="mall"',
-        "supermarket": '"shop"="supermarket"',
-        "university": '"amenity"="university"',
-        "school": '"amenity"="school"',
-        "kindergarten": '"amenity"="kindergarten"',
-        "castle": '"historic"="castle"',
-        "catholic_place": '"denomination"="roman_catholic"',
-        "parking": '"amenity"="parking"',
-        "bank": '"amenity"="bank"',
-        "bus": '"route"="bus"',
-        "trolleybus": '"route"="trolleybus"',
-        "polish_city": '"name:prefix"="miasto"',
+        "attraction": '["tourism"="attraction"]',
+        "museum": '["tourism"="museum"]',
+        "theatre": '["amenity"="theatre"]',
+        "restaurant": '["amenity"="restaurant"]',
+        "mall": '["shop"="mall"]',
+        "supermarket": '["shop"="supermarket"]',
+        "university": '["amenity"="university"]',
+        "school": '["amenity"="school"]',
+        "kindergarten": '["amenity"="kindergarten"]',
+        "castle": '["historic"="castle"]',
+        "catholic_place": '["denomination"="roman_catholic"]',
+        "parking": '["amenity"="parking"]',
+        "bank": '["amenity"="bank"]',
+        "bus": '["route"="bus"]',
+        "trolleybus": '["route"="trolleybus"]',
+        "polish_city": '["name:prefix"="miasto"]',
+        "highway": '[highway]',
+        "underground_parking_entrance": '[amenity=parking_entrance][parking=underground]'
     }
-
-    return type_selector_map.get(type_, None)
+    return type_selector_map.get(el_type, None)
 
 
 if __name__ == "__main__":
-    fetch_pack = choose_relation("Lublin", "attraction")
-    data = fetch_data_by_relation(fetch_pack["rel"], fetch_pack["sel"], "relation")
+    data = fetch_data_by_id(374172786, 'way', 'node', 'underground_parking_entrance', 'geojson')
+    # print(json.dumps(data, indent=4, sort_keys=True))
     r = json.dumps(data, indent=4, sort_keys=True)
-    print(r)
-
     with open("data.json", "w", encoding="utf-8") as f:
         f.write(r)
