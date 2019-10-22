@@ -10,7 +10,7 @@ class Transport:
         self.schedule_api = "http://transit.land/api/v1/schedule_stop_pairs"
 
     def get_bus_station_by_coords(
-            self, lat: float, lon: float, radius: int = 500
+        self, lat: float, lon: float, radius: int = 500
     ) -> Union[Dict, None]:
         params = {"lat": lat, "lon": lon, "r": radius}
         res = requests.get(self.stop_api, params)
