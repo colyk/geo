@@ -1,3 +1,6 @@
+from __future__ import annotations
+import numpy as np
+
 import math
 from decimal import Decimal, getcontext
 from pprint import pprint
@@ -9,6 +12,16 @@ from typing import List, Tuple, Union, Dict, Any
     Graph to adjacency matrix
 """
 getcontext().prec = 10
+
+
+class AdjacencyMatrix:
+    __slots__ = ['matrix', 'nodes']
+
+    def __init__(self, graph: Graph):
+        sorted_nodes = sorted(graph.nodes, key=lambda n: n.name)
+        nodes_count = len(graph.nodes)
+        self.nodes = map(lambda n: n.name, sorted_nodes)
+        self.matrix = np.zeros(nodes_count * nodes_count).reshape((nodes_count, nodes_count))
 
 
 class Node:
@@ -26,12 +39,12 @@ class Node:
         self.x = Decimal(x)
         self.y = Decimal(y)
 
-    def __add__(self, other):
+    def __add__(self, other: Node):
         """https://janakiev.com/blog/gps-points-distance-python/"""
 
         return math.sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
 
-    def __eq__(self, other):
+    def __eq__(self, other: Node):
         return self.name == other.name and self.x == other.x and self.y == other.y
 
     def __repr__(self):
@@ -46,9 +59,9 @@ class Edge:
 
     def __init__(self, f_node: Node, s_node: Node):
         self.edge = frozenset([f_node, s_node])
-        self.weight = f_node + s_node
+        self.weight = Decimal(f_node + s_node)
 
-    def __eq__(self, other):
+    def __eq__(self, other: Edge):
         return self.edge == other.edge
 
     def __repr__(self):
@@ -112,10 +125,14 @@ class Graph:
                     json[node.name][conn_node.name] = edge.weight
         return json
 
+    def matrix(self) ->AdjacencyMatrix:
+        return AdjacencyMatrix(self)
+
     def __repr__(self):
         nodes = "Nodes:\n" + "\n".join([str(node) for node in self.nodes])
         edges = "\nEdges:\n" + "\n".join([str(edge) for edge in self.edges])
         return nodes + edges
+
 
 
 if __name__ == "__main__":
@@ -129,3 +146,6 @@ if __name__ == "__main__":
 
     print(g)
     pprint(g.json())
+
+    m = g.matrix()
+    print(m.matrix)
