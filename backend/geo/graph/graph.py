@@ -15,13 +15,15 @@ getcontext().prec = 10
 
 
 class AdjacencyMatrix:
-    __slots__ = ['matrix', 'nodes']
+    __slots__ = ["matrix", "nodes"]
 
     def __init__(self, graph: Graph):
         sorted_nodes = sorted(graph.nodes, key=lambda n: n.name)
         nodes_count = len(graph.nodes)
         self.nodes = map(lambda n: n.name, sorted_nodes)
-        self.matrix = np.zeros(nodes_count * nodes_count).reshape((nodes_count, nodes_count))
+        self.matrix = np.zeros(nodes_count * nodes_count).reshape(
+            (nodes_count, nodes_count)
+        )
 
 
 class Node:
@@ -125,14 +127,13 @@ class Graph:
                     json[node.name][conn_node.name] = edge.weight
         return json
 
-    def matrix(self) ->AdjacencyMatrix:
+    def matrix(self) -> AdjacencyMatrix:
         return AdjacencyMatrix(self)
 
     def __repr__(self):
         nodes = "Nodes:\n" + "\n".join([str(node) for node in self.nodes])
         edges = "\nEdges:\n" + "\n".join([str(edge) for edge in self.edges])
         return nodes + edges
-
 
 
 if __name__ == "__main__":

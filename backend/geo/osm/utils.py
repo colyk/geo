@@ -14,18 +14,6 @@ def get_info_by_coord(lat: float, lon: float) -> Union[Dict, None]:
     return None
 
 
-def get_bus_station_by_coord(lat: float, lon: float) -> Union[Dict, None]:
-    url = "http://transit.land/api/v1/stops"
-    params = {"lat": lat, "lon": lon}
-    res = requests.get(url, params)
-    if res.ok:
-        return res.json()
-
-    return None
-
-
 if __name__ == "__main__":
     info = get_info_by_coord(51.21824, 22.4233422)
-    bus_info = get_bus_station_by_coord(51.23997, 22.5515647)
     print(info)
-    pprint(bus_info)
