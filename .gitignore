@@ -4,3 +4,4 @@ venv
 
 *.log
 .coverage
+coverage.xml
