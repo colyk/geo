@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.com/colyk/geo.svg?branch=master)](https://travis-ci.com/colyk/geo)
+[![codecov](https://codecov.io/gh/colyk/geo/branch/master/graph/badge.svg)](https://codecov.io/gh/colyk/geo)
 
 # backend
 ## Install dependencies
