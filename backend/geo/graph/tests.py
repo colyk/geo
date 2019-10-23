@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from .graph import Node, Edge, Graph
-from .utils import create_graph_from_geo_data
+from .utils import create_graph_from_geo_data, get_lines_intersection_point
 
 
 class UtilsCase(TestCase):
@@ -13,6 +13,17 @@ class UtilsCase(TestCase):
         self.assertEqual(len(g.nodes), 4)
         self.assertEqual(len(g.edges), 6)
 
+    def test_lines_intersection_point(self):
+        line1 = ((0, 1), (3, 1))
+        line2 = ((1, 0), (1, 3))
+        i_point = get_lines_intersection_point(line1, line2)
+        self.assertSequenceEqual(i_point, (1, 1))
+
+        line1 = ((1, 1), (3, 3))
+        line2 = ((2, 2), (4, 4))
+        res = get_lines_intersection_point(line1, line2)
+        self.assertIsNone(res)
+
 
 class NodeCase(TestCase):
     def setUp(self) -> None:
@@ -22,6 +33,16 @@ class NodeCase(TestCase):
     def test_adding_nodes_return_distance(self):
         distance = self.node1 + self.node2
         self.assertEqual(distance, 1)
+
+
+class EdgeCase(TestCase):
+    def test_edges_could_be_compared(self):
+        edge1 = Edge(Node(1, (0, 0)), Node(2, (0, 1)))
+        edge2 = Edge(Node(1, (0, 0)), Node(2, (0, 1)))
+        self.assertTrue(edge1 == edge2)
+
+        edge2 = Edge(Node(1, (0, 0)), Node(2, (0, 10)))
+        self.assertFalse(edge1 == edge2)
 
 
 class GraphCase(TestCase):
@@ -88,3 +109,15 @@ class GraphCase(TestCase):
         self.assertEqual(len(json[1]), 2)
         self.assertEqual(len(json[2]), 2)
         self.assertEqual(len(json[3]), 2)
+
+    def test_graph_to_matrix(self):
+        self.g.add_nodes([self.node1, self.node2, self.node3])
+        self.g.add_edges([self.edge1, self.edge2, self.edge3])
+
+        matrix = self.g.matrix().matrix
+        rows, columns = matrix.shape
+        self.assertEqual(rows, 3)
+        self.assertEqual(columns, 3)
+        self.assertSequenceEqual(
+            [[0.0, 1.0, 2.0], [1.0, 0.0, 1.0], [2.0, 1.0, 0.0]], matrix.tolist()
+        )

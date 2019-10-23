@@ -18,12 +18,18 @@ class AdjacencyMatrix:
     __slots__ = ["matrix", "nodes"]
 
     def __init__(self, graph: Graph):
-        sorted_nodes = sorted(graph.nodes, key=lambda n: n.name)
-        nodes_count = len(graph.nodes)
-        self.nodes = map(lambda n: n.name, sorted_nodes)
+        self.nodes = list(sorted(graph.nodes, key=lambda n: n.name))
+        nodes_count = len(self.nodes)
         self.matrix = np.zeros(nodes_count * nodes_count).reshape(
             (nodes_count, nodes_count)
         )
+
+        for edge in graph.edges:
+            n1, n2 = edge.edge
+            idx1 = self.nodes.index(n1)
+            idx2 = self.nodes.index(n2)
+            self.matrix[idx1][idx2] = edge.weight
+            self.matrix[idx2][idx1] = edge.weight
 
 
 class Node:
