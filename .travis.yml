@@ -5,6 +5,6 @@ install:
   - pip install -r requirements.txt
   - pip install codecov
 script:
-  - python backend/manage.py test
+  - python backend/manage.py test geo
 after_success:
   - codecov
