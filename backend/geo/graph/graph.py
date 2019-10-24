@@ -95,8 +95,8 @@ class Graph:
         for node in nodes:
             self.add_node(node)
 
-    def add_edge(self, edge: Edge):
-        if self.is_possible_edge(edge) and not self.has_edge(edge):
+    def add_edge(self, edge: Edge, force: bool = False):
+        if self.is_possible_edge(edge) and not self.has_edge(edge) or force:
             self.edges.add(edge)
 
     def add_edges(self, edges: List[Edge]):
@@ -120,6 +120,14 @@ class Graph:
                 conn_node, = edge_difference
                 conn_nodes.append(conn_node)
         return conn_nodes
+
+    def get_node_edges(self, node: Node) -> List[Edge]:
+        edges = []
+        for edge in self.edges:
+            edge_difference = edge.edge - {node}
+            if len(edge_difference) == 1:
+                edges.append(edge)
+        return edges
 
     def json(self) -> Dict[Any, Dict]:
         json = {}
