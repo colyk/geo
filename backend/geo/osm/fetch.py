@@ -5,29 +5,37 @@ from typing import List
 api = overpass.API()
 
 
-def fetch_data_by_id(area_id, ref_class, el_class, el_type, responseformat):
+def fetch_data_by_id(
+    area_id: float,
+    ref_class: str,
+    el_classes: List[str],
+    el_type: str,
+    responseformat="geojson",
+):
     query = ref_class + "(" + str(area_id) + ");\nmap_to_area->.a;\n(\n"
     selector = type_to_selector(el_type)
     if selector is None:
         return None
-    for i, val in enumerate(el_class):
+    for el_class in el_classes:
         for val in selector:
-            query += "\t" + el_class[i] + "(area .a)" + val + ";\n"
+            query += "\t" + el_class + "(area .a)" + val + ";\n"
     query += ");\n(._;>;);"
     # print(query)
     return api.get(query, responseformat=responseformat)
 
 
-def fetch_data_by_bbox(south, west, north, east, el_class, el_type, responseformat):
+def fetch_data_by_bbox(
+    south: float,
+    west: float,
+    north: float,
+    east: float,
+    el_class,
+    el_type,
+    responseformat="geojson",
+):
     query = (
         "way("
-        + str(south)
-        + ","
-        + str(west)
-        + ","
-        + str(north)
-        + ","
-        + str(east)
+        + ",".join([str(south), str(west), str(north), str(east)])
         + ");\nmap_to_area->.a;\n(\n"
     )
     selector = type_to_selector(el_type)
@@ -94,7 +102,7 @@ def type_to_selector(el_type):
         for i, val in enumerate(el_type):
             if isinstance(val, List):
                 selector += (
-                    type_selector_map.get(el_type[i][0])[0:-1]
+                    type_selector_map.get(el_type[i][0])[:-1]
                     + '="'
                     + el_type[i][1]
                     + '"]'
@@ -111,15 +119,16 @@ def type_to_selector(el_type):
 
 
 if __name__ == "__main__":
-    # data = fetch_data_by_id(574812157, 'way', 'way', 'steps', 'geojson')
-    data = fetch_data_by_id(
-        2904797,
-        "relation",
-        ["node", "way"],
-        [["street_address", "Krakowskie Przedmieście"], "name", "building"],
-        "geojson",
+    # data = fetch_data_by_id(574812157, 'way', ['way'], 'steps')
+    # data = fetch_data_by_id(
+    #     2904797,
+    #     "relation",
+    #     ["node", "way"],
+    #     [["street_address", "Krakowskie Przedmieście"], "name", "building"]
+    # )
+    data = fetch_data_by_bbox(
+        51.1952, 22.5384, 51.2012, 22.5485, ["node", "way"], "bicycle_parking"
     )
-    # data = fetch_data_by_bbox(51.1952, 22.5384, 51.2012, 22.5485, ['node', 'way'], 'bicycle_parking', 'geojson')
     print(json.dumps(data, indent=4, sort_keys=True))
     r = json.dumps(data, indent=4, sort_keys=True)
     with open("data.json", "w", encoding="utf-8") as f:
