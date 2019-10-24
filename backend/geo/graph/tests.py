@@ -121,3 +121,15 @@ class GraphCase(TestCase):
         self.assertSequenceEqual(
             [[0.0, 1.0, 2.0], [1.0, 0.0, 1.0], [2.0, 1.0, 0.0]], matrix.tolist()
         )
+
+    def test_sum_of_graphs(self):
+        g1 = Graph()
+        g2 = Graph()
+        g1.add_nodes([self.node1, self.node2])
+        g1.add_edges([self.edge1, self.edge2])
+        g2.add_nodes([self.node2, self.node3])
+        g2.add_edges([self.edge2, self.edge3])
+        g = g1 + g2
+
+        self.assertEqual(len(g.nodes), 3)
+        self.assertEqual(len(g.edges), 2)

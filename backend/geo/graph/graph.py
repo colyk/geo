@@ -4,7 +4,7 @@ import numpy as np
 import math
 from decimal import Decimal, getcontext
 from pprint import pprint
-from typing import List, Tuple, Union, Dict, Any
+from typing import List, Tuple, Union, Dict, Any, Set
 
 """
     Todo:
@@ -83,9 +83,9 @@ class Edge:
 class Graph:
     __slots__ = ["nodes", "edges"]
 
-    def __init__(self):
-        self.nodes = set()
-        self.edges = set()
+    def __init__(self, nodes: Set[Node] = None, edges: Set[Edge] = None):
+        self.nodes = nodes or set()
+        self.edges = edges or set()
 
     def add_node(self, node: Node):
         if not self.has_node(node):
@@ -135,6 +135,11 @@ class Graph:
 
     def matrix(self) -> AdjacencyMatrix:
         return AdjacencyMatrix(self)
+
+    def __add__(self, other):
+        nodes = self.nodes | other.nodes
+        edges = self.edges | other.edges
+        return Graph(nodes, edges)
 
     def __repr__(self):
         nodes = "Nodes:\n" + "\n".join([str(node) for node in self.nodes])
