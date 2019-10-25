@@ -91,17 +91,19 @@ class Graph:
         if not self.has_node(node):
             self.nodes.add(node)
 
-    def add_nodes(self, nodes: List[Node]):
+    def add_nodes(self, nodes: List[Node]) -> Graph:
         for node in nodes:
             self.add_node(node)
+        return self
 
-    def add_edge(self, edge: Edge, force: bool = False):
-        if self.is_possible_edge(edge) and not self.has_edge(edge) or force:
+    def add_edge(self, edge: Edge):
+        if self.is_possible_edge(edge) and not self.has_edge(edge):
             self.edges.add(edge)
 
-    def add_edges(self, edges: List[Edge]):
+    def add_edges(self, edges: Union[Set, List][Edge]) -> Graph:
         for edge in edges:
             self.add_edge(edge)
+        return self
 
     def has_node(self, node: Node) -> bool:
         return any(filter(lambda n: n == node, self.nodes))

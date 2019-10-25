@@ -1,5 +1,8 @@
+from itertools import combinations
+
 from django.test import TestCase
 
+from .prim import prim
 from .dijkstra import dijkstra
 from ..graph import Node, Edge, Graph
 
@@ -37,3 +40,22 @@ class DijkstraCase(TestCase):
 
         path = dijkstra(g, node1, node3)
         self.assertIsNone(path)
+
+
+class PrimCase(TestCase):
+    def test_prim_algorithm(self):
+        g = Graph()
+        nodes = [
+            Node("A", (0, 0)),
+            Node("B", (3, 3)),
+            Node("C", (6, 0)),
+            Node("D", (3, 1.5)),
+        ]
+        edges_combinations = list(combinations(nodes, 2))
+        edges = [Edge(node1, node2) for node1, node2 in edges_combinations]
+        g.add_nodes(nodes).add_edges(edges)
+
+        g_ = prim(g)
+
+        self.assertEqual(len(g_.nodes), len(nodes))
+        self.assertEqual(len(g_.edges), 3)
