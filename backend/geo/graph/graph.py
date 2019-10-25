@@ -107,8 +107,7 @@ class Graph:
         return self
 
     def has_node(self, node: Node) -> bool:
-        cmp_edges: Callable[[Any], Any] = lambda n: n == node
-        return any(filter(cmp_edges, self.nodes))
+        return any(filter(lambda n: n == node, self.nodes))
 
     def is_possible_edge(self, edge: Edge) -> bool:
         return edge.edge.issubset(self.nodes)
