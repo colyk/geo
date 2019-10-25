@@ -5,3 +5,5 @@ venv
 *.log
 .coverage
 coverage.xml
+
+.mypy_cache

@@ -1,10 +1,11 @@
 from __future__ import annotations
-import numpy as np
 
 import math
 from decimal import Decimal, getcontext
 from pprint import pprint
-from typing import List, Tuple, Union, Dict, Any, Set
+from typing import List, Tuple, Union, Dict, Any, Set, Callable
+
+import numpy as np
 
 """
     Todo:
@@ -52,7 +53,7 @@ class Node:
 
         return math.sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
 
-    def __eq__(self, other: Node):
+    def __eq__(self, other):
         return self.name == other.name and self.x == other.x and self.y == other.y
 
     def __repr__(self):
@@ -69,7 +70,7 @@ class Edge:
         self.edge = frozenset([f_node, s_node])
         self.weight = Decimal(f_node + s_node)
 
-    def __eq__(self, other: Edge):
+    def __eq__(self, other):
         return self.edge == other.edge
 
     def __repr__(self):
@@ -84,8 +85,8 @@ class Graph:
     __slots__ = ["nodes", "edges"]
 
     def __init__(self, nodes: Set[Node] = None, edges: Set[Edge] = None):
-        self.nodes = nodes or set()
-        self.edges = edges or set()
+        self.nodes: Set[Node] = nodes or set()
+        self.edges: Set[Edge] = edges or set()
 
     def add_node(self, node: Node):
         if not self.has_node(node):
@@ -100,19 +101,20 @@ class Graph:
         if self.is_possible_edge(edge) and not self.has_edge(edge):
             self.edges.add(edge)
 
-    def add_edges(self, edges: Union[Set, List][Edge]) -> Graph:
+    def add_edges(self, edges: Union[Set[Edge], List[Edge]]) -> Graph:
         for edge in edges:
             self.add_edge(edge)
         return self
 
     def has_node(self, node: Node) -> bool:
-        return any(filter(lambda n: n == node, self.nodes))
+        cmp_edges: Callable[[Any], Any] = lambda n: n == node
+        return any(filter(cmp_edges, self.nodes))
 
     def is_possible_edge(self, edge: Edge) -> bool:
         return edge.edge.issubset(self.nodes)
 
     def has_edge(self, edge: Edge) -> bool:
-        return any(filter(lambda e: e.edge == edge.edge, self.edges))
+        return any(filter(lambda e: e.edge == edge.edge, self.edges))  # type: ignore
 
     def get_connected_nodes(self, node: Node) -> List[Node]:
         conn_nodes = []
@@ -132,7 +134,7 @@ class Graph:
         return edges
 
     def json(self) -> Dict[Any, Dict]:
-        json = {}
+        json: Dict[Any, Dict] = {}
 
         for node in self.nodes:
             json[node.name] = {}
