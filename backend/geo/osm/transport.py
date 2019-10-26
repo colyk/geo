@@ -1,23 +1,32 @@
+import time
 from pprint import pprint
-from typing import Union, Dict
+from typing import Union, Dict, List
 
 import requests
+
+from backend.geo.cache.cache import Cache
 
 
 class Transport:
     def __init__(self):
         self.api = "http://transit.land/api/v1/"
+        self.cache = Cache(prefix="transport")
 
     def get_bus_station_by_coords(
-        self, lat: float, lon: float, radius: int = 500
+        self, coords: List[float], radius: int = 500
     ) -> Union[Dict, None]:
+        cache_file = str(coords) + str(radius)
+        cached_result = self.cache.get(cache_file)
+        if cached_result is not None:
+            return cached_result
         api = self.api + "stops"
+        lat, lon = coords
         params = {"lat": lat, "lon": lon, "r": radius}
         res = requests.get(api, params)
         if res.ok:
-            # "osm_way_id" is osm id of nearest pedestrian road
-            return self._parse_stops(res.json())
-
+            json_res = self._parse_stops(res.json())
+            self.cache.add(cache_file, json_res)
+            return json_res
         return None
 
     def route_path(self, from_id, to_id):
@@ -38,6 +47,9 @@ class Transport:
 
 if __name__ == "__main__":
     t = Transport()
-    bus_info = t.get_bus_station_by_coords(51.23997, 22.5515647)
+    coords = [51.23997, 22.5515648]
 
+    start = time.time()
+    bus_info = t.get_bus_station_by_coords(coords)
+    print(time.time() - start)
     pprint(bus_info)
