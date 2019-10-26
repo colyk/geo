@@ -4,7 +4,7 @@ from typing import Union, Dict, List
 
 import requests
 
-from backend.geo.cache.cache import Cache
+from backend.geo.cache import Cache
 
 
 class Transport:
