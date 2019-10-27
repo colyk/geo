@@ -1,15 +1,15 @@
 import json
 import overpass
-from typing import List
+from typing import List, Sequence
 
-api = overpass.API()
+api = overpass.API(timeout=60)
 
 
 def fetch_data_by_id(
     area_id: float,
     ref_class: str,
     el_classes: List[str],
-    el_type: str,
+    el_type: List[Sequence[str]],
     responseformat="geojson",
 ):
     query = ref_class + "(" + str(area_id) + ");\nmap_to_area->.a;\n(\n"
@@ -20,8 +20,8 @@ def fetch_data_by_id(
         for val in selector:
             query += "\t" + el_class + "(area .a)" + val + ";\n"
     query += ");\n(._;>;);"
-    # print(query)
-    return api.get(query, responseformat=responseformat)
+    print(query)
+    return api.get(query, responseformat=responseformat, verbosity="geom")
 
 
 def fetch_data_by_bbox(
@@ -46,7 +46,7 @@ def fetch_data_by_bbox(
             query += "\t" + el_class[i] + "(area.a)" + val + ";\n"
     query += ");\n(._;>;);"
     print(query)
-    return api.get(query, responseformat=responseformat)
+    return api.get(query, responseformat=responseformat, verbosity="geom")
 
 
 def type_to_selector(el_type):
@@ -120,15 +120,15 @@ def type_to_selector(el_type):
 
 if __name__ == "__main__":
     # data = fetch_data_by_id(574812157, 'way', ['way'], 'steps')
-    # data = fetch_data_by_id(
-    #     2904797,
-    #     "relation",
-    #     ["node", "way"],
-    #     [["street_address", "Krakowskie Przedmieście"], "name", "building"]
-    # )
-    data = fetch_data_by_bbox(
-        51.1952, 22.5384, 51.2012, 22.5485, ["node", "way"], "bicycle_parking"
+    data = fetch_data_by_id(
+        2904797,
+        "relation",
+        ["way"],
+        [["street_address", "Artura Grottgera"], "name", "building"],
     )
+    # data = fetch_data_by_bbox(
+    #     51.1952, 22.5384, 51.2012, 22.5485, ["way"], "bicycle_parking"
+    # )
     print(json.dumps(data, indent=4, sort_keys=True))
     r = json.dumps(data, indent=4, sort_keys=True)
     with open("data.json", "w", encoding="utf-8") as f:

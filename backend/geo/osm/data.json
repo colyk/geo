@@ -3,536 +3,450 @@
         {
             "geometry": {
                 "coordinates": [
-                    22.541757,
-                    51.196224
+                    22.549775,
+                    51.246355
                 ],
                 "type": "Point"
             },
-            "id": 6355026523,
+            "id": 4429139659,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.541769,
-                    51.196224
+                    22.549171,
+                    51.246367
                 ],
                 "type": "Point"
             },
-            "id": 6355026524,
+            "id": 4429139662,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.541763,
-                    51.196167
+                    22.549399,
+                    51.246389
                 ],
                 "type": "Point"
             },
-            "id": 6355026525,
+            "id": 4429139669,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.541751,
-                    51.196167
+                    22.54947,
+                    51.247451
                 ],
                 "type": "Point"
             },
-            "id": 6355026526,
+            "id": 4429139947,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.541244,
-                    51.196387
+                    22.549602,
+                    51.247043
                 ],
                 "type": "Point"
             },
-            "id": 6400982615,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.54127,
-                    51.196385
-                ],
-                "type": "Point"
-            },
-            "id": 6400982616,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.541222,
-                    51.196217
-                ],
-                "type": "Point"
-            },
-            "id": 6400982617,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.54125,
-                    51.196216
-                ],
-                "type": "Point"
-            },
-            "id": 6400982618,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.541213,
-                    51.19612
-                ],
-                "type": "Point"
-            },
-            "id": 6400982619,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.541243,
-                    51.196118
-                ],
-                "type": "Point"
-            },
-            "id": 6400982620,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.541216,
-                    51.19595
-                ],
-                "type": "Point"
-            },
-            "id": 6400982621,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.541189,
-                    51.195951
-                ],
-                "type": "Point"
-            },
-            "id": 6400982622,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.54023,
-                    51.195917
-                ],
-                "type": "Point"
-            },
-            "id": 6401475092,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.540259,
-                    51.195916
-                ],
-                "type": "Point"
-            },
-            "id": 6401475093,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.540276,
-                    51.196085
-                ],
-                "type": "Point"
-            },
-            "id": 6401475094,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.54025,
-                    51.196087
-                ],
-                "type": "Point"
-            },
-            "id": 6401475095,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.540266,
-                    51.196184
-                ],
-                "type": "Point"
-            },
-            "id": 6401475096,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.54029,
-                    51.196182
-                ],
-                "type": "Point"
-            },
-            "id": 6401475097,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.540301,
-                    51.196274
-                ],
-                "type": "Point"
-            },
-            "id": 6401475098,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.540275,
-                    51.196275
-                ],
-                "type": "Point"
-            },
-            "id": 6401475099,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.540766,
-                    51.19641
-                ],
-                "type": "Point"
-            },
-            "id": 6401559136,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.540793,
-                    51.196409
-                ],
-                "type": "Point"
-            },
-            "id": 6401559137,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.540823,
-                    51.196407
-                ],
-                "type": "Point"
-            },
-            "id": 6401559138,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.540784,
-                    51.19624
-                ],
-                "type": "Point"
-            },
-            "id": 6401559139,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.540752,
-                    51.196241
-                ],
-                "type": "Point"
-            },
-            "id": 6401559140,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.540742,
-                    51.196145
-                ],
-                "type": "Point"
-            },
-            "id": 6401559141,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.540774,
-                    51.196143
-                ],
-                "type": "Point"
-            },
-            "id": 6401559142,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.540747,
-                    51.195973
-                ],
-                "type": "Point"
-            },
-            "id": 6401559143,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.540715,
-                    51.195975
-                ],
-                "type": "Point"
-            },
-            "id": 6401559144,
-            "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.542251,
-                    51.196183
-                ],
-                "type": "Point"
-            },
-            "id": 6404173096,
+            "id": 4429140348,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.542245,
-                    51.196131
+                    22.549602,
+                    51.247045
                 ],
                 "type": "Point"
             },
-            "id": 6404173097,
+            "id": 4429140349,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.542254,
-                    51.19613
+                    22.549751,
+                    51.247048
                 ],
                 "type": "Point"
             },
-            "id": 6404173098,
+            "id": 4429140350,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.54226,
-                    51.196183
+                    22.549209,
+                    51.246524
                 ],
                 "type": "Point"
             },
-            "id": 6404173099,
+            "id": 4429140398,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.54168,
-                    51.198645
+                    22.549327,
+                    51.246922
                 ],
                 "type": "Point"
             },
-            "id": 6545315863,
+            "id": 4429140429,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.541674,
-                    51.198597
+                    22.549306,
+                    51.246924
                 ],
                 "type": "Point"
             },
-            "id": 6545315864,
+            "id": 4429140430,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.541683,
-                    51.198593
+                    22.549757,
+                    51.246995
                 ],
                 "type": "Point"
             },
-            "id": 6545315865,
+            "id": 4429140435,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.541689,
-                    51.198642
+                    22.549734,
+                    51.246995
                 ],
                 "type": "Point"
             },
-            "id": 6545315868,
+            "id": 4429140436,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.541689,
-                    51.198642
+                    22.549591,
+                    51.246997
                 ],
                 "type": "Point"
             },
-            "id": 678710541,
+            "id": 4429140437,
+            "properties": {},
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    22.54952,
+                    51.247006
+                ],
+                "type": "Point"
+            },
+            "id": 4429140440,
+            "properties": {},
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    22.54936,
+                    51.247023
+                ],
+                "type": "Point"
+            },
+            "id": 4429140446,
+            "properties": {},
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    22.549334,
+                    51.247028
+                ],
+                "type": "Point"
+            },
+            "id": 4429140450,
+            "properties": {},
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    22.54964,
+                    51.247217
+                ],
+                "type": "Point"
+            },
+            "id": 4429140456,
+            "properties": {},
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    22.549579,
+                    51.247223
+                ],
+                "type": "Point"
+            },
+            "id": 4429140459,
+            "properties": {},
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    22.549418,
+                    51.247242
+                ],
+                "type": "Point"
+            },
+            "id": 4429140464,
+            "properties": {},
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    22.549671,
+                    51.247313
+                ],
+                "type": "Point"
+            },
+            "id": 4429140476,
+            "properties": {},
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    22.54982,
+                    51.247335
+                ],
+                "type": "Point"
+            },
+            "id": 4429140482,
+            "properties": {},
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    22.549443,
+                    51.247411
+                ],
+                "type": "Point"
+            },
+            "id": 4429140525,
+            "properties": {},
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    22.549841,
+                    51.247492
+                ],
+                "type": "Point"
+            },
+            "id": 4429140544,
+            "properties": {},
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    22.549517,
+                    51.247469
+                ],
+                "type": "Point"
+            },
+            "id": 4429140547,
+            "properties": {},
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    22.549615,
+                    51.24749
+                ],
+                "type": "Point"
+            },
+            "id": 4429140558,
+            "properties": {},
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    [
+                        22.549418,
+                        51.247242
+                    ],
+                    [
+                        22.54936,
+                        51.247023
+                    ],
+                    [
+                        22.549334,
+                        51.247028
+                    ],
+                    [
+                        22.549306,
+                        51.246924
+                    ],
+                    [
+                        22.549327,
+                        51.246922
+                    ],
+                    [
+                        22.549209,
+                        51.246524
+                    ],
+                    [
+                        22.549171,
+                        51.246367
+                    ],
+                    [
+                        22.549399,
+                        51.246389
+                    ],
+                    [
+                        22.549775,
+                        51.246355
+                    ],
+                    [
+                        22.549734,
+                        51.246995
+                    ],
+                    [
+                        22.549757,
+                        51.246995
+                    ],
+                    [
+                        22.549751,
+                        51.247048
+                    ],
+                    [
+                        22.549602,
+                        51.247045
+                    ],
+                    [
+                        22.549602,
+                        51.247043
+                    ],
+                    [
+                        22.549591,
+                        51.246997
+                    ],
+                    [
+                        22.54952,
+                        51.247006
+                    ],
+                    [
+                        22.549579,
+                        51.247223
+                    ],
+                    [
+                        22.549418,
+                        51.247242
+                    ]
+                ],
+                "type": "LineString"
+            },
+            "id": 294817135,
             "properties": {
-                "amenity": "bicycle_parking"
+                "addr:city": "Lublin",
+                "addr:housenumber": "6",
+                "addr:street": "Artura Grottgera",
+                "building": "yes",
+                "building:levels": "6",
+                "name": "Urz\u0105d Marsza\u0142kowski"
             },
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.541689,
-                    51.198642
+                    [
+                        22.549615,
+                        51.24749
+                    ],
+                    [
+                        22.549517,
+                        51.247469
+                    ],
+                    [
+                        22.54947,
+                        51.247451
+                    ],
+                    [
+                        22.549443,
+                        51.247411
+                    ],
+                    [
+                        22.549418,
+                        51.247242
+                    ],
+                    [
+                        22.549579,
+                        51.247223
+                    ],
+                    [
+                        22.54964,
+                        51.247217
+                    ],
+                    [
+                        22.549671,
+                        51.247313
+                    ],
+                    [
+                        22.54982,
+                        51.247335
+                    ],
+                    [
+                        22.549841,
+                        51.247492
+                    ],
+                    [
+                        22.549615,
+                        51.24749
+                    ]
                 ],
-                "type": "Point"
+                "type": "LineString"
             },
-            "id": 683701990,
+            "id": 294817136,
             "properties": {
-                "amenity": "bicycle_parking"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.541689,
-                    51.198642
-                ],
-                "type": "Point"
-            },
-            "id": 696954142,
-            "properties": {
-                "amenity": "bicycle_parking"
+                "addr:city": "Lublin",
+                "addr:housenumber": "4",
+                "addr:street": "Artura Grottgera",
+                "building": "yes",
+                "building:levels": "6",
+                "name": "Lubelskie Centrum Konferencyjne"
             },
             "type": "Feature"
         }
