@@ -1,5 +1,17 @@
 <template>
 <v-app>
+        <v-alert
+        id="alert"
+        dense
+        outlined
+        type="error"
+        transition="slide-y-transition"
+        :value="!!alert"
+        dismissible
+        :min-width="400"
+      >
+        {{alert}}
+      </v-alert>
     <v-container class="grey lighten-5" fluid>
       <v-row no-gutters>
         <v-col
@@ -46,15 +58,26 @@ export default {
   data() {
     return {
       geojson: null,
+      alert: null
     };
   },
   methods: {
     drawGeojson(file) {
-      if (!file)
+      if (!file){
         this.geojson = null;
+        this.alert = null;
+        }
       else {
         const reader = new FileReader();
-        reader.onload = e => this.geojson = JSON.parse(e.target.result);
+        reader.onload = e => {
+        try {
+          this.geojson = JSON.parse(e.target.result);
+          this.alert = null;
+          }
+        catch(e) {
+            this.alert = "Bad file"
+          }
+        };
         reader.readAsText(file);
       }
     },
@@ -64,4 +87,11 @@ export default {
 
 <style>
 .v-context { padding:0!important;}
+
+#alert {
+  position: absolute;
+  z-index: 10000;
+  background-color: #fff!important;
+  margin-left: 80px;
+}
 </style>

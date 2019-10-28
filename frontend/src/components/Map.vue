@@ -88,7 +88,7 @@ export default {
     },
     showGeojsonAtCenter() {
       this.bounds = this.$refs.geojson.getBounds();
-      this.$refs.map.fitBounds(this.bounds)
+      this.$refs.map.fitBounds(this.bounds);
     },
     onContextMenu(e) {
       this.$emit('right-click', e.latlng);
