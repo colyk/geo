@@ -3,300 +3,96 @@
         {
             "geometry": {
                 "coordinates": [
-                    22.549775,
-                    51.246355
+                    22.561184,
+                    51.243104
                 ],
                 "type": "Point"
             },
-            "id": 4429139659,
+            "id": 1904518741,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.549171,
-                    51.246367
+                    22.560997,
+                    51.243193
                 ],
                 "type": "Point"
             },
-            "id": 4429139662,
+            "id": 1904518791,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.549399,
-                    51.246389
+                    22.560989,
+                    51.243084
                 ],
                 "type": "Point"
             },
-            "id": 4429139669,
+            "id": 1904518793,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.54947,
-                    51.247451
+                    22.561095,
+                    51.243147
                 ],
                 "type": "Point"
             },
-            "id": 4429139947,
+            "id": 1904518798,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.549602,
-                    51.247043
+                    22.561097,
+                    51.243032
                 ],
                 "type": "Point"
             },
-            "id": 4429140348,
+            "id": 1904518814,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.549602,
-                    51.247045
+                    22.560982,
+                    51.243136
                 ],
                 "type": "Point"
             },
-            "id": 4429140349,
+            "id": 1904518848,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.549751,
-                    51.247048
+                    22.560947,
+                    51.243153
                 ],
                 "type": "Point"
             },
-            "id": 4429140350,
+            "id": 1904518885,
             "properties": {},
             "type": "Feature"
         },
         {
             "geometry": {
                 "coordinates": [
-                    22.549209,
-                    51.246524
+                    22.560944,
+                    51.243105
                 ],
                 "type": "Point"
             },
-            "id": 4429140398,
-            "properties": {},
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.549327,
-                    51.246922
-                ],
-                "type": "Point"
-            },
-            "id": 4429140429,
-            "properties": {},
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.549306,
-                    51.246924
-                ],
-                "type": "Point"
-            },
-            "id": 4429140430,
-            "properties": {},
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.549757,
-                    51.246995
-                ],
-                "type": "Point"
-            },
-            "id": 4429140435,
-            "properties": {},
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.549734,
-                    51.246995
-                ],
-                "type": "Point"
-            },
-            "id": 4429140436,
-            "properties": {},
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.549591,
-                    51.246997
-                ],
-                "type": "Point"
-            },
-            "id": 4429140437,
-            "properties": {},
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.54952,
-                    51.247006
-                ],
-                "type": "Point"
-            },
-            "id": 4429140440,
-            "properties": {},
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.54936,
-                    51.247023
-                ],
-                "type": "Point"
-            },
-            "id": 4429140446,
-            "properties": {},
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.549334,
-                    51.247028
-                ],
-                "type": "Point"
-            },
-            "id": 4429140450,
-            "properties": {},
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.54964,
-                    51.247217
-                ],
-                "type": "Point"
-            },
-            "id": 4429140456,
-            "properties": {},
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.549579,
-                    51.247223
-                ],
-                "type": "Point"
-            },
-            "id": 4429140459,
-            "properties": {},
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.549418,
-                    51.247242
-                ],
-                "type": "Point"
-            },
-            "id": 4429140464,
-            "properties": {},
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.549671,
-                    51.247313
-                ],
-                "type": "Point"
-            },
-            "id": 4429140476,
-            "properties": {},
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.54982,
-                    51.247335
-                ],
-                "type": "Point"
-            },
-            "id": 4429140482,
-            "properties": {},
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.549443,
-                    51.247411
-                ],
-                "type": "Point"
-            },
-            "id": 4429140525,
-            "properties": {},
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.549841,
-                    51.247492
-                ],
-                "type": "Point"
-            },
-            "id": 4429140544,
-            "properties": {},
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.549517,
-                    51.247469
-                ],
-                "type": "Point"
-            },
-            "id": 4429140547,
-            "properties": {},
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    22.549615,
-                    51.24749
-                ],
-                "type": "Point"
-            },
-            "id": 4429140558,
+            "id": 1904518950,
             "properties": {},
             "type": "Feature"
         },
@@ -304,149 +100,52 @@
             "geometry": {
                 "coordinates": [
                     [
-                        22.549418,
-                        51.247242
+                        22.561184,
+                        51.243104
                     ],
                     [
-                        22.54936,
-                        51.247023
+                        22.561095,
+                        51.243147
                     ],
                     [
-                        22.549334,
-                        51.247028
+                        22.560997,
+                        51.243193
                     ],
                     [
-                        22.549306,
-                        51.246924
+                        22.560947,
+                        51.243153
                     ],
                     [
-                        22.549327,
-                        51.246922
+                        22.560982,
+                        51.243136
                     ],
                     [
-                        22.549209,
-                        51.246524
+                        22.560944,
+                        51.243105
                     ],
                     [
-                        22.549171,
-                        51.246367
+                        22.560989,
+                        51.243084
                     ],
                     [
-                        22.549399,
-                        51.246389
+                        22.561097,
+                        51.243032
                     ],
                     [
-                        22.549775,
-                        51.246355
-                    ],
-                    [
-                        22.549734,
-                        51.246995
-                    ],
-                    [
-                        22.549757,
-                        51.246995
-                    ],
-                    [
-                        22.549751,
-                        51.247048
-                    ],
-                    [
-                        22.549602,
-                        51.247045
-                    ],
-                    [
-                        22.549602,
-                        51.247043
-                    ],
-                    [
-                        22.549591,
-                        51.246997
-                    ],
-                    [
-                        22.54952,
-                        51.247006
-                    ],
-                    [
-                        22.549579,
-                        51.247223
-                    ],
-                    [
-                        22.549418,
-                        51.247242
+                        22.561184,
+                        51.243104
                     ]
                 ],
                 "type": "LineString"
             },
-            "id": 294817135,
+            "id": 180012871,
             "properties": {
                 "addr:city": "Lublin",
-                "addr:housenumber": "6",
-                "addr:street": "Artura Grottgera",
+                "addr:housenumber": "28",
+                "addr:postcode": "20-010",
+                "addr:street": "Dolna Panny Marii",
                 "building": "yes",
-                "building:levels": "6",
-                "name": "Urz\u0105d Marsza\u0142kowski"
-            },
-            "type": "Feature"
-        },
-        {
-            "geometry": {
-                "coordinates": [
-                    [
-                        22.549615,
-                        51.24749
-                    ],
-                    [
-                        22.549517,
-                        51.247469
-                    ],
-                    [
-                        22.54947,
-                        51.247451
-                    ],
-                    [
-                        22.549443,
-                        51.247411
-                    ],
-                    [
-                        22.549418,
-                        51.247242
-                    ],
-                    [
-                        22.549579,
-                        51.247223
-                    ],
-                    [
-                        22.54964,
-                        51.247217
-                    ],
-                    [
-                        22.549671,
-                        51.247313
-                    ],
-                    [
-                        22.54982,
-                        51.247335
-                    ],
-                    [
-                        22.549841,
-                        51.247492
-                    ],
-                    [
-                        22.549615,
-                        51.24749
-                    ]
-                ],
-                "type": "LineString"
-            },
-            "id": 294817136,
-            "properties": {
-                "addr:city": "Lublin",
-                "addr:housenumber": "4",
-                "addr:street": "Artura Grottgera",
-                "building": "yes",
-                "building:levels": "6",
-                "name": "Lubelskie Centrum Konferencyjne"
+                "source:addr": "EMUiA (emuia.geoportal.gov.pl)"
             },
             "type": "Feature"
         }
