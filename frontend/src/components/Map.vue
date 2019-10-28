@@ -49,7 +49,7 @@ export default {
   props: {
     circlesCoords: { type: Array, default: () => [] },
     lineCoords: { type: Array, default: () => [] },
-    geojson: { type: Array, default: () => [] },
+    geojson: { type: Object, default: () => {} },
   },
   data() {
     return {
