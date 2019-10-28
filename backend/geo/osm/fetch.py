@@ -120,6 +120,12 @@ def type_to_selector(el_type):
 
 if __name__ == "__main__":
     # data = fetch_data_by_id(574812157, 'way', ['way'], 'steps')
+    # data = fetch_data_by_id(
+    #     2904797,
+    #     "relation",
+    #     ["way"],
+    #     [["street_address", "Artura Grottgera"], "name", "building"],
+    # )
     data = fetch_data_by_id(
         2904797,
         "relation",
@@ -129,7 +135,7 @@ if __name__ == "__main__":
     # data = fetch_data_by_bbox(
     #     51.1952, 22.5384, 51.2012, 22.5485, ["way"], "bicycle_parking"
     # )
-    print(json.dumps(data, indent=4, sort_keys=True))
+    # print(json.dumps(data, indent=4, sort_keys=True))
     r = json.dumps(data, indent=4, sort_keys=True)
     with open("data.json", "w", encoding="utf-8") as f:
         f.write(r)
