@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
 import {
-  LMap, LTileLayer, LMarker, LCircle, LPolyline, LControl, LGeoJson
+  LMap, LTileLayer, LMarker, LCircle, LPolyline, LControl, LGeoJson,
 } from 'vue2-leaflet';
 import LControlPolylineMeasure from 'vue2-leaflet-polyline-measure';
 import { Icon } from 'leaflet';
@@ -16,7 +16,7 @@ Vue.component('l-circle', LCircle);
 Vue.component('l-polyline', LPolyline);
 Vue.component('l-control', LControl);
 Vue.component('l-control-polyline-measure', LControlPolylineMeasure);
-Vue.component('l-geo-json', LGeoJson)
+Vue.component('l-geo-json', LGeoJson);
 
 delete Icon.Default.prototype._getIconUrl;
 

@@ -50,11 +50,13 @@ export default {
   },
   methods: {
     drawGeojson(file) {
-      console.log(file)
-      const reader = new FileReader();
-reader.onload = e => this.geojson = JSON.parse(e.target.result);
-
-reader.readAsText(file);
+      if (!file)
+        this.geojson = null;
+      else {
+        const reader = new FileReader();
+        reader.onload = e => this.geojson = JSON.parse(e.target.result);
+        reader.readAsText(file);
+      }
     },
   },
 };

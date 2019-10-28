@@ -1,11 +1,16 @@
 <template>
   <v-app >
     <l-map
+      ref="map"
       @contextmenu="onContextMenu"
       :zoom="zoom"
       :center="center"
       :zoomAnimation="true"
       :markerZoomAnimation="true"
+      :fadeAnimation="true"
+      :inertia="true"
+      :inertiaMaxSpeed="50"
+      :inertiaDeceleration="200"
       @update:zoom="zoomUpdated"
       @update:center="centerUpdated"
       @update:bounds="boundsUpdated"
@@ -25,13 +30,17 @@
         :lat-lngs="lineCoords"
         color="#55eb34cc">
       </l-polyline>
-      <l-control position="bottomleft" >
-       <v-btn small id="show_loc" @click="showCurLoc">My location</v-btn>
+      <l-control position="bottomleft">
+       <v-btn small class="map_btn" @click="showCurLoc">My location</v-btn>
+     </l-control>
+      <l-control v-if="geojson" position="bottomleft">
+       <v-btn small class="map_btn" @click="showGeojsonAtCenter">Center geoJson data</v-btn>
      </l-control>
       <v-geosearch :options="geosearchOptions" ></v-geosearch>
       <l-control-polyline-measure :options="{ showUnitControl: false }" position="bottomright"/>
       <l-geo-json
         :geojson="geojson"
+        ref="geojson"
       >
       </l-geo-json>
     </l-map>
@@ -49,7 +58,7 @@ export default {
   props: {
     circlesCoords: { type: Array, default: () => [] },
     lineCoords: { type: Array, default: () => [] },
-    geojson: { type: Object, default: () => {} },
+    geojson: { type: Object, default: null },
   },
   data() {
     return {
@@ -69,13 +78,17 @@ export default {
   },
   mounted() {},
   methods: {
-    showCurLoc(e) {
+    showCurLoc() {
       getCurrentPosition().then(({ coords }) => {
         this.center = [coords.latitude, coords.longitude];
         this.zoom = 11;
         this.markerLatLng = this.center;
         console.log(this.center);
       });
+    },
+    showGeojsonAtCenter() {
+      this.bounds = this.$refs.geojson.getBounds();
+      this.$refs.map.fitBounds(this.bounds)
     },
     onContextMenu(e) {
       this.$emit('right-click', e.latlng);
@@ -95,8 +108,8 @@ export default {
 </script>
 
 <style>
-  #show_loc {
-    background-color: #fff;
-    text-transform: capitalize;
+  .map_btn {
+    background-color: #fff!important;
+    text-transform: capitalize!important;
   }
 </style>

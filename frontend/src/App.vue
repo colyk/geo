@@ -38,35 +38,34 @@
 </template>
 
 <script>
-  import PathBuilder from './components/PathBuilder.vue';
-  import GeoJsonDrawer from "./components/GeoJsonDrawer";
+import PathBuilder from './components/PathBuilder.vue';
+import GeoJsonDrawer from './components/GeoJsonDrawer';
 
-  export default {
-    name: 'app',
-    components: {
-      GeoJsonDrawer,
-      PathBuilder,
-    },
-    data: function() {
-      return {
-        drawPathBuilder: false,
-        drawGeoJsonDrawer: true,
+export default {
+  name: 'app',
+  components: {
+    GeoJsonDrawer,
+    PathBuilder,
+  },
+  data() {
+    return {
+      drawPathBuilder: false,
+      drawGeoJsonDrawer: true,
+    };
+  },
+
+  methods: {
+    onItemClick(type) {
+      if (type === 'build_path') {
+        this.drawPathBuilder = true;
+        this.drawGeoJsonDrawer = false;
+      } else {
+        this.drawPathBuilder = false;
+        this.drawGeoJsonDrawer = true;
       }
     },
-
-    methods: {
-      onItemClick(type)  {
-        if (type === 'build_path') {
-          this.drawPathBuilder = true;
-          this.drawGeoJsonDrawer = false;
-        }
-        else {
-          this.drawPathBuilder = false;
-          this.drawGeoJsonDrawer = true;
-        }
-      },
-    }
-  };
+  },
+};
 </script>
 
 <style>
