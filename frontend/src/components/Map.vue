@@ -62,8 +62,8 @@ export default {
   },
   data() {
     return {
-      // https://wiki.openstreetmap.org/wiki/Tile_servers
-      url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      // https://leaflet-extras.github.io/leaflet-providers/preview/
+      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       zoom: 12,
       circleRadius: 400,
       center: [51.2477870, 22.570132],
