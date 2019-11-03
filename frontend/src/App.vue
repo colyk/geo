@@ -81,7 +81,7 @@ export default {
   }
 
   .maps {
-    margin-left: 60px;
+    margin-left: 72px;
   }
 
   #nav {

@@ -15,7 +15,7 @@
       @update:center="centerUpdated"
       @update:bounds="boundsUpdated"
     >
-      <l-tile-layer :url="url"></l-tile-layer>
+      <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
       <l-marker v-if="markerLatLng" :lat-lng="markerLatLng" ></l-marker>
       <l-circle
         v-if="circlesCoords.length"
@@ -69,6 +69,7 @@ export default {
       center: [51.2477870, 22.570132],
       bounds: null,
       markerLatLng: null,
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       geosearchOptions: {
         provider: new OpenStreetMapProvider(),
         // autoClose: true,

@@ -1,10 +1,9 @@
 <template>
 <v-app>
-    <v-container class="grey lighten-5" fluid>
+    <v-container class="grey lighten-5 pa-0" fluid>
       <v-row no-gutters>
         <v-col
-          cols="1"
-          sm="10"
+          cols="10"
         >
           <v-card
             outlined
@@ -20,7 +19,6 @@
         </v-col>
         <v-col
           cols="2"
-          sm="2"
         >
           <v-card
             outlined
