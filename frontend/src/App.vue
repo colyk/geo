@@ -12,26 +12,23 @@
           nav
           dense
         >
-          <v-list-item @click="onItemClick('build_path')">
+          <v-list-item @click="onItemClick('build_path')" :class="{ 'blue-grey lighten-4': drawPathBuilder }">
             <v-list-item-icon>
               <v-icon>mdi-map-marker-radius</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Build path</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="onItemClick('geojson')">
+          <v-list-item @click="onItemClick('geojson')" :class="{ 'blue-grey lighten-4': drawGeoJsonViewer }">
             <v-list-item-icon>
               <v-icon>mdi-map</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Draw GeoJson</v-list-item-title>
+            <v-list-item-title>GeoJson viewer</v-list-item-title>
           </v-list-item>
 
         </v-list>
       </v-navigation-drawer>
-
-            <PathBuilder v-if="drawPathBuilder" class="maps"/>
-            <GeoJsonDrawer v-if="drawGeoJsonDrawer" class="maps"/>
-
-
+        <PathBuilder v-if="drawPathBuilder" class="maps"/>
+        <GeoJsonViewer v-if="drawGeoJsonViewer" class="maps"/>
     </v-card>
 
   </v-app>
@@ -39,18 +36,18 @@
 
 <script>
 import PathBuilder from './components/PathBuilder.vue';
-import GeoJsonDrawer from './components/GeoJsonDrawer';
+import GeoJsonViewer from './components/GeoJsonViewer';
 
 export default {
   name: 'app',
   components: {
-    GeoJsonDrawer,
+    GeoJsonViewer,
     PathBuilder,
   },
   data() {
     return {
       drawPathBuilder: false,
-      drawGeoJsonDrawer: true,
+      drawGeoJsonViewer: true,
     };
   },
 
@@ -58,10 +55,10 @@ export default {
     onItemClick(type) {
       if (type === 'build_path') {
         this.drawPathBuilder = true;
-        this.drawGeoJsonDrawer = false;
+        this.drawGeoJsonViewer = false;
       } else {
         this.drawPathBuilder = false;
-        this.drawGeoJsonDrawer = true;
+        this.drawGeoJsonViewer = true;
       }
     },
   },

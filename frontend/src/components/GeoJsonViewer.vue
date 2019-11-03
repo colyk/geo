@@ -49,7 +49,7 @@ import Map from './Map.vue';
 import { fetchPath } from '../Requests';
 
 export default {
-  name: 'GeoJsonDrawer',
+  name: 'GeoJsonViewer',
   components: {
     Map,
   },
