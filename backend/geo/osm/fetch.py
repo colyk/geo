@@ -30,26 +30,30 @@ class OSM:
 
     def fetch_data_by_bbox(
         self,
-        south: float,
-        west: float,
-        north: float,
-        east: float,
-        el_class,
+        min_lat: float,
+        min_lon: float,
+        max_lat: float,
+        max_lon: float,
         el_type,
+        el_classes: List[str] = ["node", "way", "relation"],
         responseformat="geojson",
     ):
         query = (
             "way("
-            + ",".join([str(south), str(west), str(north), str(east)])
+            + ",".join([str(min_lat), str(min_lon), str(max_lat), str(max_lon)])
             + ");\nmap_to_area->.a;\n(\n"
         )
         selector = self.type_to_selector(el_type)
         if selector is None:
             return None
-        for i, val in enumerate(el_class):
+        for i, val in enumerate(el_classes):
             for val in selector:
                 query += (
-                    "\t" + el_class[i] + "(area.a)(if: count_tags() > 0)" + val + ";\n"
+                    "\t"
+                    + el_classes[i]
+                    + "(area.a)(if: count_tags() > 0)"
+                    + val
+                    + ";\n"
                 )
         query += ");\n(._;>;);"
         print(query)
@@ -89,18 +93,16 @@ if __name__ == "__main__":
     #     ["way"],
     #     [["street_address", "Artura Grottgera"], "name", "building"],
     # )
-    # data = fetch_data_by_bbox(
-    #     51.1952, 22.5384, 51.2012, 22.5485, ["way"], "bicycle_parking"
+    data = osm.fetch_data_by_bbox(51.1952, 22.5384, 51.2012, 22.5485, "bicycle_parking")
+    # data = osm.fetch_data_by_id(
+    #     2904797,
+    #     "relation",
+    #     [
+    #         ["address_street", "Dolna Panny Marii"],
+    #         ["address_housenumber", "28"],
+    #         "building",
+    #     ],
     # )
-    data = osm.fetch_data_by_id(
-        2904797,
-        "relation",
-        [
-            ["address_street", "Dolna Panny Marii"],
-            ["address_housenumber", "28"],
-            "building",
-        ],
-    )
     r = json.dumps(data, indent=4, sort_keys=True)
     print(r)
     with open("data.json", "w", encoding="utf-8") as f:

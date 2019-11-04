@@ -6,50 +6,50 @@ from math import radians, cos, sin, asin, sqrt
 class GeoJSONTools:
     def get_bbox(self, data):
         min_lat = min_lon = max_lat = max_lon = 0
-        for i, key in enumerate(data["features"]):
-            if bool(key["properties"]) is False:
-                if i == 0:
-                    min_lon = key["geometry"]["coordinates"][0]
-                    max_lon = key["geometry"]["coordinates"][0]
-                    min_lat = key["geometry"]["coordinates"][1]
-                    max_lat = key["geometry"]["coordinates"][1]
-                else:
-                    lon = key["geometry"]["coordinates"][0]
-                    lat = key["geometry"]["coordinates"][1]
-                    if lon < min_lon:
-                        min_lon = lon
-                    elif lon > max_lon:
-                        max_lon = lon
-                    if lat < min_lat:
-                        min_lat = lat
-                    elif lat > max_lat:
-                        max_lat = lat
-        if min_lat == 0 and min_lon == 0 and max_lat == 0 and max_lon == 0:
+        for key in data["features"]:
+            lon, lat = self.get_coordinates(key["geometry"]["coordinates"])
+            if min_lat == min_lon == max_lat == max_lon == 0:
+                min_lon = max_lon = lon
+                min_lat = max_lat = lat
+            else:
+                if lon < min_lon:
+                    min_lon = lon
+                elif lon > max_lon:
+                    max_lon = lon
+                if lat < min_lat:
+                    min_lat = lat
+                elif lat > max_lat:
+                    max_lat = lat
+        if min_lat == min_lon == max_lat == max_lon == 0:
             return None
-        return [min_lat, min_lon, max_lat, max_lon]
-
-    def scale_bbox(self, bbox: List[float], increase: float = 0.2):
-        increase_lat = increase * (bbox[2] - bbox[0])
-        increase_lon = increase * (bbox[3] - bbox[1])
-        min_lat = bbox[0] - increase_lat
-        min_lon = bbox[1] - increase_lon
-        max_lat = bbox[2] + increase_lat
-        max_lon = bbox[3] + increase_lon
-        return [min_lat, min_lon, max_lat, max_lon]
+        return min_lat, min_lon, max_lat, max_lon
 
     def is_data_inside_bbox(self, data, bbox: List[float]):
-        found = False
         min_lat, min_lon, max_lat, max_lon = bbox
-        for i, key in enumerate(data["features"]):
-            if bool(key["properties"]) is False:
-                found = True
-                x = key["geometry"]["coordinates"][0]
-                y = key["geometry"]["coordinates"][1]
-                if x < min_lon or x > max_lon or y < min_lat or y > max_lat:
-                    return False
-        if found:
-            return True
-        return None
+        for key in data["features"]:
+            lon, lat = self.get_coordinates(key["geometry"]["coordinates"])
+            if lon < min_lon or lon > max_lon or lat < min_lat or lat > max_lat:
+                return False
+        return True
+
+    def get_coordinates(self, coordinates):
+        lon = coordinates[0]
+        if isinstance(lon, List):
+            for node in coordinates:
+                lon = node[0]
+                lat = node[1]
+        else:
+            lat = coordinates[1]
+        return lon, lat
+
+    def scale_bbox(self, bbox: List[float], scale: float = 0.2):
+        scale_lat = scale * (bbox[2] - bbox[0])
+        scale_lon = scale * (bbox[3] - bbox[1])
+        min_lat = bbox[0] - scale_lat
+        min_lon = bbox[1] - scale_lon
+        max_lat = bbox[2] + scale_lat
+        max_lon = bbox[3] + scale_lon
+        return min_lat, min_lon, max_lat, max_lon
 
     def haversine_formula(self, lat1: float, lon1: float, lat2: float, lon2: float):
         lat1 = radians(lat1)
@@ -82,7 +82,7 @@ class GeoJSONTools:
                     nearest_lat = lat
                     nearest_lon = lon
         if found:
-            return [nearest_lat, nearest_lon]
+            return nearest_lat, nearest_lon
 
     def find_ways_by_point(self, data, lat, lon):
         ways = []
