@@ -1,4 +1,6 @@
-routes = []
+from typing import List
+
+routes: List = []
 
 
 def build_path(graph):

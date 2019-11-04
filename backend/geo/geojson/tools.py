@@ -51,7 +51,7 @@ class GeoJSONTools:
         max_lon = bbox[3] + scale_lon
         return min_lat, min_lon, max_lat, max_lon
 
-    def haversine_formula(self, lat1: float, lon1: float, lat2: float, lon2: float):
+    def haversine(self, lat1: float, lon1: float, lat2: float, lon2: float):
         lat1 = radians(lat1)
         lon1 = radians(lon1)
         lat2 = radians(lat2)
@@ -77,8 +77,8 @@ class GeoJSONTools:
                     found = True
                     nearest_lat = lat
                     nearest_lon = lon
-                    distance = self.haversine_formula(point_lat, point_lon, lat, lon)
-                if self.haversine_formula(point_lat, point_lon, lat, lon) < distance:
+                    distance = self.haversine(point_lat, point_lon, lat, lon)
+                if self.haversine(point_lat, point_lon, lat, lon) < distance:
                     nearest_lat = lat
                     nearest_lon = lon
         if found:

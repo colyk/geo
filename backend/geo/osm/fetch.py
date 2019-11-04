@@ -1,32 +1,45 @@
 import json
-import overpass
 from typing import List, Sequence
+
+import overpass
+
+from .types import types
+
+
+class OSMError(Exception):
+    def __init__(self, message):
+        super().__init__(message)
 
 
 class OSM:
-    def __init__(self):
+    def __init__(self, responseformat: str = "geojson", debug: bool = False):
         self.api = overpass.API(timeout=60)
+        self.responseformat = responseformat
+        self.debug = debug
 
-    def fetch_data_by_id(
+        self.default_el_classes = ["node", "way", "relation"]
+
+    def fetch(
         self,
-        area_id: float,
+        q: str,
         ref_class: str,
         el_type: List[Sequence[str]],
-        el_classes: List[str] = ["node", "way", "relation"],
-        responseformat="geojson",
+        el_classes: List[str] = None,
     ):
-        query = ref_class + "(" + str(area_id) + ");\nmap_to_area->.a;\n(\n"
+        if el_classes is None:
+            el_classes = self.default_el_classes
+
         selector = self.type_to_selector(el_type)
-        if selector is None:
-            return None
+
+        query = f"{ref_class}({q});\nmap_to_area->.a;\n(\n"
         for el_class in el_classes:
             for val in selector:
-                query += (
-                    "\t" + el_class + "(area .a)(if: count_tags() > 0)" + val + ";\n"
-                )
+                query += f"\t{el_class}(area .a)(if: count_tags() > 0){val};\n"
         query += ");\n(._;>;);"
-        print(query)
-        return self.api.get(query, responseformat=responseformat, verbosity="geom")
+
+        if self.debug:
+            print(query)
+        return self.api.get(query, responseformat=self.responseformat, verbosity="geom")
 
     def fetch_data_by_bbox(
         self,
@@ -35,67 +48,42 @@ class OSM:
         max_lat: float,
         max_lon: float,
         el_type,
-        el_classes: List[str] = ["node", "way", "relation"],
-        responseformat="geojson",
+        el_classes: List[str] = None,
     ):
-        query = (
-            "way("
-            + ",".join([str(min_lat), str(min_lon), str(max_lat), str(max_lon)])
-            + ");\nmap_to_area->.a;\n(\n"
-        )
-        selector = self.type_to_selector(el_type)
-        if selector is None:
-            return None
-        for i, val in enumerate(el_classes):
-            for val in selector:
-                query += (
-                    "\t"
-                    + el_classes[i]
-                    + "(area.a)(if: count_tags() > 0)"
-                    + val
-                    + ";\n"
-                )
-        query += ");\n(._;>;);"
-        print(query)
-        return self.api.get(query, responseformat=responseformat, verbosity="geom")
+        bbox = ",".join([str(min_lat), str(min_lon), str(max_lat), str(max_lon)])
+        return self.fetch(bbox, "way", el_type, el_classes)
 
     def type_to_selector(self, el_type):
-        with open("types.json", "r", encoding="utf-8") as f:
-            type_selector_map = json.loads(f.read())
-            # with open("types.json", "w", encoding="utf-8") as f1:
-            # f1.write(json.dumps(type_selector_map, indent=4, sort_keys=True))
-            selector = ""
-            if isinstance(el_type, List):
-                for i, val in enumerate(el_type):
-                    if isinstance(val, List):
-                        selector += (
-                            type_selector_map[el_type[i][0]][:-1]
-                            + '="'
-                            + el_type[i][1]
-                            + '"]'
-                        )
-                    else:
-                        selector += type_selector_map.get(el_type[i])
-            else:
-                selector = type_selector_map.get(el_type, None)
-            type_list = selector.split("|")
-            if len(type_list) > 1:
-                for i, val in enumerate(type_list):
-                    type_list[i] = type_selector_map.get(val)
-            return type_list
+        selector = ""
+        if isinstance(el_type, List):
+            for i, val in enumerate(el_type):
+                if isinstance(val, List):
+                    selector += types[el_type[i][0]][:-1] + '="' + el_type[i][1] + '"]'
+                else:
+                    selector += types.get(el_type[i], "")
+        else:
+            selector = types.get(el_type, "")
+        type_list = selector.split("|")
+        if len(type_list) > 1:
+            for i, val in enumerate(type_list):
+                type_list[i] = types.get(val)
+
+        if not type_list:
+            raise OSMError("Unknown el_type")
+        return type_list
 
 
 if __name__ == "__main__":
-    osm = OSM()
-    # data = osm.fetch_data_by_id(
-    #     2904797,
+    osm = OSM(debug=True)
+    # data = osm.fetch(
+    #     "2904797",
     #     "relation",
     #     ["way"],
     #     [["street_address", "Artura Grottgera"], "name", "building"],
     # )
-    data = osm.fetch_data_by_bbox(51.1952, 22.5384, 51.2012, 22.5485, "bicycle_parking")
-    # data = osm.fetch_data_by_id(
-    #     2904797,
+    data = osm.fetch_data_by_bbox(51.1952, 22.5384, 51.2012, 22.5485, "_pedestrian_way")
+    # data = osm.fetch(
+    #     "2904797",
     #     "relation",
     #     [
     #         ["address_street", "Dolna Panny Marii"],
