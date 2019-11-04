@@ -36,7 +36,7 @@
 <script>
 
 import Map from './Map.vue';
-
+import GeoJSON from '../geojson'
 
 export default {
   name: 'Drawer',
