@@ -15,6 +15,7 @@
       @update:center="centerUpdated"
       @update:bounds="boundsUpdated"
     >
+      <l-draw-toolbar v-if="showDrawToolbar" ref="drawToolbar"/>
       <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
       <l-marker v-if="markerLatLng" :lat-lng="markerLatLng" ></l-marker>
       <l-circle
@@ -50,15 +51,17 @@
 <script>
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import VGeosearch from 'vue2-leaflet-geosearch';
+import lDrawToolbar from './mapDrawTool/lDrawToolbar';
 import { getCurrentPosition } from '../utils';
 
 export default {
   name: 'Map',
-  components: { VGeosearch },
+  components: { VGeosearch, lDrawToolbar },
   props: {
     circlesCoords: { type: Array, default: () => [] },
     lineCoords: { type: Array, default: () => [] },
     geojson: { type: Object, default: null },
+    showDrawToolbar: { type: Boolean, default: false },
   },
   data() {
     return {

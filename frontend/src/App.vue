@@ -25,10 +25,18 @@
             <v-list-item-title>GeoJson viewer</v-list-item-title>
           </v-list-item>
 
+          <v-list-item @click="onItemClick('drawer')" :class="{ 'blue-grey lighten-4': drawDrawer }">
+            <v-list-item-icon>
+              <v-icon>mdi-draw</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Geo drawer</v-list-item-title>
+          </v-list-item>
+
         </v-list>
       </v-navigation-drawer>
         <PathBuilder v-if="drawPathBuilder" class="maps"/>
         <GeoJsonViewer v-if="drawGeoJsonViewer" class="maps"/>
+        <Drawer v-if="drawDrawer" class="maps"/>
     </v-card>
 
   </v-app>
@@ -37,16 +45,19 @@
 <script>
 import PathBuilder from './components/PathBuilder.vue';
 import GeoJsonViewer from './components/GeoJsonViewer';
+import Drawer from './components/Drawer';
 
 export default {
   name: 'app',
   components: {
     GeoJsonViewer,
     PathBuilder,
+    Drawer
   },
   data() {
     return {
       drawPathBuilder: false,
+      drawDrawer: false,
       drawGeoJsonViewer: true,
     };
   },
@@ -56,9 +67,17 @@ export default {
       if (type === 'build_path') {
         this.drawPathBuilder = true;
         this.drawGeoJsonViewer = false;
-      } else {
+        this.drawDrawer = false;
+      }
+      if (type === 'geojson') {
         this.drawPathBuilder = false;
+        this.drawDrawer = false;
         this.drawGeoJsonViewer = true;
+      }
+      if (type === 'drawer') {
+        this.drawPathBuilder = false;
+        this.drawDrawer = true;
+        this.drawGeoJsonViewer = false;
       }
     },
   },
