@@ -3,7 +3,7 @@ from typing import List, Sequence
 
 import overpass
 
-from .types import types
+from backend.geo.osm.types import types
 
 
 class OSMError(Exception):
@@ -39,9 +39,11 @@ class OSM:
 
         if self.debug:
             print(query)
-        return self.api.get(query, responseformat=self.responseformat, verbosity="geom")
+        return self.strip_data(
+            self.api.get(query, responseformat=self.responseformat, verbosity="geom")
+        )
 
-    def fetch_data_by_bbox(
+    def fetch_by_bbox(
         self,
         min_lat: float,
         min_lon: float,
@@ -52,6 +54,14 @@ class OSM:
     ):
         bbox = ",".join([str(min_lat), str(min_lon), str(max_lat), str(max_lon)])
         return self.fetch(bbox, "way", el_type, el_classes)
+
+    def strip_data(self, data):
+        striped_data = str(data)
+        for key in data["features"]:
+            if not key["properties"]:
+                striped_data = striped_data.replace(str(key) + ", ", "")
+                striped_data = striped_data.replace(str(key), "")
+        return json.loads(striped_data)
 
     def type_to_selector(self, el_type):
         selector = ""
@@ -74,14 +84,14 @@ class OSM:
 
 
 if __name__ == "__main__":
-    osm = OSM(debug=True)
-    # data = osm.fetch(
-    #     "2904797",
-    #     "relation",
-    #     ["way"],
-    #     [["street_address", "Artura Grottgera"], "name", "building"],
-    # )
-    data = osm.fetch_data_by_bbox(51.1952, 22.5384, 51.2012, 22.5485, "_pedestrian_way")
+    osm = OSM()
+    data = osm.fetch(
+        "2904797",
+        "relation",
+        [["address_street", "Artura Grottgera"], "name", "building"],
+        ["way"],
+    )
+    # data = osm.fetch_by_bbox(51.1952, 22.5384, 51.2012, 22.5485, "_pedestrian_way")
     # data = osm.fetch(
     #     "2904797",
     #     "relation",
@@ -91,7 +101,7 @@ if __name__ == "__main__":
     #         "building",
     #     ],
     # )
+    # data = osm.strip_data(data)
     r = json.dumps(data, indent=4, sort_keys=True)
-    print(r)
     with open("data.json", "w", encoding="utf-8") as f:
         f.write(r)
