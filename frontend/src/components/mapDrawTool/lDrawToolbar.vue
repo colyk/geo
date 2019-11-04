@@ -4,8 +4,8 @@
 </template>
 
 <script>
-import 'leaflet-draw'
-import 'leaflet-toolbar'
+import 'leaflet-draw';
+import 'leaflet-toolbar';
 import ColorPicker from './ColorPicker';
 import Draw from './draw';
 import Edit from './edit';
@@ -15,59 +15,61 @@ export default {
   props: {
     position: {
       type: String,
-      default: 'topleft'
+      default: 'topleft',
     },
   },
 
   data() {
-  return {
-    data: []
-    }
+    return {
+      data: [],
+    };
   },
 
   mounted() {
     this.$nextTick(() => {
       const map = this.$parent.$parent.$parent.$refs.map.mapObject;
 
-      let editActions = [
+      const editActions = [
         L.Toolbar2.EditAction.Popup.Edit,
         L.Toolbar2.EditAction.Popup.Delete,
         L.Toolbar2.Action.extendOptions({
           toolbarIcon: {
             className: 'leaflet-color-picker',
-            html: '<i class="fas fa-fill-drip"></i>'
+            html: '<i class="fas fa-fill-drip"></i>',
           },
-          subToolbar: new L.Toolbar2({ actions: [
-            L.ColorPicker.extendOptions({ color: '#db1d0f' }),
-            L.ColorPicker.extendOptions({ color: '#025100' }),
-            L.ColorPicker.extendOptions({ color: '#ffff00' }),
-            L.ColorPicker.extendOptions({ color: '#0000ff' })
-          ]})
-        })
+          subToolbar: new L.Toolbar2({
+            actions: [
+              L.ColorPicker.extendOptions({ color: '#db1d0f' }),
+              L.ColorPicker.extendOptions({ color: '#025100' }),
+              L.ColorPicker.extendOptions({ color: '#ffff00' }),
+              L.ColorPicker.extendOptions({ color: '#0000ff' }),
+            ],
+          }),
+        }),
       ];
 
       window.t = new L.Toolbar2.DrawToolbar({
-          position: this.position
+        position: this.position,
       }).addTo(map);
-      let self = this;
-      map.on('draw:created', function (e) {
-        let type = e.layerType
-        let layer = e.layer;
-        self.data.push([type, layer])
+      const self = this;
+      map.on('draw:created', (e) => {
+        const type = e.layerType;
+        const { layer } = e;
+        self.data.push([type, layer]);
 
-        layer.on('click', function(event) {
-          this.editMode = true
+        layer.on('click', function (event) {
+          this.editMode = true;
           new L.Toolbar2.EditToolbar.Popup(event.latlng, {
-            actions: editActions
+            actions: editActions,
           }).addTo(map, layer);
         });
 
         layer.addTo(map);
       });
-    })
+    });
   },
 
-}
+};
 
 </script>
 

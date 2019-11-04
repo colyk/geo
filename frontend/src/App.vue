@@ -52,33 +52,27 @@ export default {
   components: {
     GeoJsonViewer,
     PathBuilder,
-    Drawer
+    Drawer,
   },
   data() {
     return {
-      drawPathBuilder: false,
+      drawPathBuilder: true,
+      drawGeoJsonViewer: false,
       drawDrawer: false,
-      drawGeoJsonViewer: true,
     };
   },
 
   methods: {
     onItemClick(type) {
-      if (type === 'build_path') {
-        this.drawPathBuilder = true;
-        this.drawGeoJsonViewer = false;
-        this.drawDrawer = false;
-      }
-      if (type === 'geojson') {
-        this.drawPathBuilder = false;
-        this.drawDrawer = false;
-        this.drawGeoJsonViewer = true;
-      }
-      if (type === 'drawer') {
-        this.drawPathBuilder = false;
-        this.drawDrawer = true;
-        this.drawGeoJsonViewer = false;
-      }
+      this.hideAllMaps();
+      if (type === 'build_path') this.drawPathBuilder = true;
+      if (type === 'geojson') this.drawGeoJsonViewer = true;
+      if (type === 'drawer') this.drawDrawer = true;
+    },
+    hideAllMaps() {
+      this.drawPathBuilder = false;
+      this.drawDrawer = false;
+      this.drawGeoJsonViewer = false;
     },
   },
 };

@@ -56,24 +56,22 @@ export default {
   data() {
     return {
       geojson: null,
-      alert: null
+      alert: null,
     };
   },
   methods: {
     drawGeojson(file) {
-      if (!file){
+      if (!file) {
         this.geojson = null;
         this.alert = null;
-        }
-      else {
+      } else {
         const reader = new FileReader();
-        reader.onload = e => {
-        try {
-          this.geojson = JSON.parse(e.target.result);
-          this.alert = null;
-          }
-        catch(e) {
-            this.alert = "Bad file"
+        reader.onload = (e) => {
+          try {
+            this.geojson = JSON.parse(e.target.result);
+            this.alert = null;
+          } catch (e) {
+            this.alert = 'Bad file';
           }
         };
         reader.readAsText(file);
