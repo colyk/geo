@@ -17,21 +17,21 @@ class Path(View):
         points = json.loads(request.body.decode("utf-8")).get("points", [])
         bbox = get_bbox(points)
         osm = OSM(debug=True)
-        print('Before OSM')
+        print("Before OSM")
         geojson = osm.fetch_by_bbox(*bbox, el_type="_pedestrian_way")
-        print('Before Graph')
-        with open('test', 'w') as f:
+        print("Before Graph")
+        with open("test", "w") as f:
             f.write(json.dumps(geojson))
         graph_build_time = time.time()
         graph = create_graph_from_geojson(geojson)
-        print(f'Build graph took {time.time() - graph_build_time}')
+        print(f"Build graph took {time.time() - graph_build_time}")
         f_node, *_, l_node = tuple(sorted(graph.nodes, key=lambda n: n.name))
-        print('Before Dijkstra')
+        print("Before Dijkstra")
         dijkstra_time = time.time()
         path = dijkstra(graph, f_node, l_node)
-        print(f'Dijkstra took {time.time() - dijkstra_time}')
+        print(f"Dijkstra took {time.time() - dijkstra_time}")
 
-        print('After Dijkstra')
+        print("After Dijkstra")
         path = [[float(round(n.y, 6)), float(round(n.x, 6))] for n in path]
         print(path)
         return JsonResponse({"path": path})

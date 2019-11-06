@@ -1,11 +1,11 @@
 from pprint import pprint
-from typing import Union, List
+from typing import Union, List, Dict, Tuple
 
 from ..graph import Graph, Node, Edge
 
 
 def dijkstra(graph: Graph, initial: Node, end: Node) -> Union[List[Node], None]:
-    shortest_paths = {initial: (None, 0)}
+    shortest_paths: Dict[Node, Tuple] = {initial: (None, 0)}
     current_node = initial
     visited_nodes = set()
 

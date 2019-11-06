@@ -1,49 +1,45 @@
 import json
 import time
-from collections import namedtuple
 from typing import List, Sequence
 
 import overpass
 import requests
 
-
 if __package__ is None or not __package__:
     from backend.geo.osm.osm_types import types
     from backend.geo.cache import Cache
+    from backend.geo.osm import Bbox, Coord
+    from backend.geo.osm import OSMError
 else:
     from .osm_types import types
     from ..cache import Cache
-
-Bbox = namedtuple('Bbox', ['min_lat', 'min_lon', 'max_lat', 'max_lon'])
-class OSMError(Exception):
-    def __init__(self, message):
-        super().__init__(message)
+    from . import Bbox, Coord
+    from . import OSMError
 
 
 def is_data_inside_bbox(data, bbox: Bbox) -> bool:
-    min_lat, min_lon, max_lat, max_lon = bbox
+    min_lat = bbox.min_lat
+    min_lon = bbox.min_lon
+    max_lat = bbox.max_lat
+    max_lon = bbox.max_lon
     for point in data:
-        lat, lon = point
+        lat = point.lat
+        lon = point.lon
         if lon < min_lon or lon > max_lon or lat < min_lat or lat > max_lat:
             return False
     return True
+
 
 class OSM:
     def __init__(self, responseformat: str = "geojson", debug: bool = False):
         self.api = overpass.API(timeout=60)
         self.responseformat = responseformat
         self.debug = debug
-        self.bbox_cache = Cache(prefix='bbox')
+        self.bbox_cache = Cache(prefix="bbox")
 
         self.default_el_classes = ["node", "way", "relation"]
 
-    def fetch(
-        self,
-        q: str,
-        ref_class: str,
-        el_type: List[Sequence[str]],
-        el_classes: List[str] = None,
-    ):
+    def fetch(self, q: str, ref_class: str, el_type, el_classes=None):
         if self.debug:
             self.status()
         if el_classes is None:
@@ -60,37 +56,32 @@ class OSM:
         if self.debug:
             print(query)
         time_fetch = time.time()
-        response = self.api.get(query, responseformat=self.responseformat, verbosity="geom")
+        response = self.api.get(
+            query, responseformat=self.responseformat, verbosity="geom"
+        )
         time_filter = time.time()
         filtered = self.strip_data(response)
         if self.debug:
-            print(f'Fetch time {time.time() - time_fetch}')
-            print(f'Filter time {time.time() - time_filter}')
+            print(f"Fetch time {time.time() - time_fetch}")
+            print(f"Filter time {time.time() - time_filter}")
         return filtered
 
     def status(self):
-        r = requests.get('https://overpass-api.de/api/status')
+        r = requests.get("https://overpass-api.de/api/status")
         print(r.text)
 
-    def fetch_by_bbox(
-        self,
-        bbox: Bbox,
-        el_type,
-        el_classes: List[str] = None,
-    ):
+    def fetch_by_bbox(self, bbox: Bbox, el_type, el_classes: List[str] = None):
         caches = self.bbox_cache.get_caches()
-        sbbox = f"{bbox.min_lat}, {bbox.min_lon}, {bbox.max_lat}, {bbox.max_lon}"
+        q_bbox = f"{bbox.min_lat}, {bbox.min_lon}, {bbox.max_lat}, {bbox.max_lon}"
 
         for cache in caches:
-            d = cache.split(',')
-            d = list(map(float, d))
-            d = [[d[0], d[1]], [d[2], d[3]]]
+            d = list(map(float, cache.split(",")))
+            d = [Coord(lat=d[0], lon=d[1]), Coord(lat=d[2], lon=d[3])]
             if is_data_inside_bbox(d, bbox):
-                return self.bbox_cache.get(sbbox)
+                return self.bbox_cache.get(q_bbox)
 
-        data = self.fetch(sbbox, "way", el_type, el_classes)
-
-        self.bbox_cache.add(sbbox, data)
+        data = self.fetch(q_bbox, "way", el_type, el_classes)
+        self.bbox_cache.add(q_bbox, data)
         return data
 
     def strip_data(self, data):
@@ -132,7 +123,7 @@ if __name__ == "__main__":
     start = time.time()
     bbox = Bbox(min_lat=51.1952, min_lon=22.5384, max_lat=51.2012, max_lon=22.5485)
     data = osm.fetch_by_bbox(bbox, "_pedestrian_way")
-    print(f'Fetch took {time.time() - start}')
+    print(f"Fetch took {time.time() - start}")
     # data = osm.fetch(
     #     "2904797",
     #     "relation",

@@ -1,9 +1,9 @@
+import json
 import os
 import os.path as op
-import json
 import shutil
 import zlib
-from typing import Dict, Union
+from typing import Dict, Union, List
 
 
 class Cache:
@@ -39,17 +39,16 @@ class Cache:
             return None
 
         with open(filename, "br") as f:
-            content = f.read()
-            decompressed = zlib.decompress(content).decode("utf-8")
+            decompressed = zlib.decompress(f.read()).decode("utf-8")
             json_data = json.loads(decompressed)
             return json_data
 
-    def get_caches(self):
+    def get_caches(self) -> List[str]:
         return os.listdir(self.base_path)
 
     def remove(self, name: str):
         filename = op.join(self.base_path, name)
         os.remove(filename)
 
-    def remove_all(self):
+    def invalidate_all(self) -> None:
         shutil.rmtree(self.base_path)
