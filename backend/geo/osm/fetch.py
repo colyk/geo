@@ -3,7 +3,10 @@ from typing import List, Sequence
 
 import overpass
 
-from backend.geo.osm.types import types
+if __package__ is None or not __package__:
+    from backend.geo.osm.osm_types import types
+else:
+    from .osm_types import types
 
 
 class OSMError(Exception):
