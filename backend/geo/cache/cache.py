@@ -1,6 +1,7 @@
 import os
 import os.path as op
 import json
+import shutil
 import zlib
 from typing import Dict, Union
 
@@ -46,3 +47,6 @@ class Cache:
     def remove(self, name: str):
         filename = op.join(self.base_path, name)
         os.remove(filename)
+
+    def remove_all(self):
+        shutil.rmtree(self.base_path)
