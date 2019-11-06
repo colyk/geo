@@ -4,8 +4,8 @@ from typing import Dict
 
 import geojson
 
-from backend.geo.graph.algorithm.dijkstra import dijkstra
-from backend.geo.graph.graph import Node, Graph, Edge
+from ..graph.algorithm.dijkstra import dijkstra
+from ..graph.graph import Node, Graph, Edge
 
 
 def create_graph_from_geojson(geojson: Dict) -> Graph:

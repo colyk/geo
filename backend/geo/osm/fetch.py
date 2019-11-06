@@ -1,4 +1,5 @@
 import json
+import time
 from typing import List, Sequence
 
 import overpass
@@ -37,14 +38,19 @@ class OSM:
         query = f"{ref_class}({q});\nmap_to_area->.a;\n(\n"
         for el_class in el_classes:
             for val in selector:
-                query += f"\t{el_class}(area .a)(if: count_tags() > 0){val};\n"
+                query += f"\t{el_class}(area .a){val};\n"
         query += ");\n(._;>;);"
 
         if self.debug:
             print(query)
-        return self.strip_data(
-            self.api.get(query, responseformat=self.responseformat, verbosity="geom")
-        )
+        time_fetch = time.time()
+        response = self.api.get(query, responseformat=self.responseformat, verbosity="geom")
+        time_filter = time.time()
+        filtered = self.strip_data(response)
+        if self.debug:
+            print(f'Fetch time {time.time() - time_fetch}')
+            print(f'Filter time {time.time() - time_filter}')
+        return filtered
 
     def fetch_by_bbox(
         self,

@@ -4,9 +4,9 @@ from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.generic.base import View
 
+from .graph.algorithm.dijkstra import dijkstra
+from .osm.geojson_tools import create_graph_from_geojson
 from .osm.fetch import OSM
-from .graph.utils import create_graph_from_geo_data
-from .graph.algorithm.bruteforce import build_path
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -15,14 +15,17 @@ class Path(View):
     def post(self, request):
         points = json.loads(request.body.decode("utf-8")).get("points", [])
         bbox = get_bbox(points)
-        osm = OSM()
-        osm.fetch_data_by_bbox(*bbox, el_type="_pedestrian_way")
-        g = create_graph_from_geo_data(points)
-        g_json = g.json()
-        path_idx = build_path(g_json)[1]
-        path = []
-        for idx in path_idx:
-            path.append(points[idx])
+        osm = OSM(debug=True)
+        print('Before OSM')
+        geojson = osm.fetch_by_bbox(*bbox, el_type="footway")
+        print('Before Graph')
+        graph = create_graph_from_geojson(geojson)
+        f_node, *_, l_node = tuple(sorted(graph.nodes, key=lambda n: n.name))
+        print('Before Dijkstra')
+        path = dijkstra(graph, f_node, l_node)
+        print('After Dijkstra')
+        path = [[float(round(n.y, 6)), float(round(n.x, 6))] for n in path]
+        print(path)
         return JsonResponse({"path": path})
 
 
@@ -30,8 +33,8 @@ def get_bbox(data):
     min_lat = min_lon = float("+inf")
     max_lat = max_lon = float("-inf")
     for point in data:
-        lon = point[0]
-        lat = point[1]
+        lon = round(point[1], 6)
+        lat = round(point[0], 6)
         if lon < min_lon:
             min_lon = lon
         if lon > max_lon:
