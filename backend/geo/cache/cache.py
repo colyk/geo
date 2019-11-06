@@ -19,7 +19,7 @@ class Cache:
         if not op.isdir(self.base_path):
             os.mkdir(self.base_path)
 
-        self.compress_level = params.get("self.compress_level", 5)
+        self.compress_level = params.get("compress_level", 5)
 
     def add(self, name: str, data: Dict, format_: str = "json"):
         name = str(name)
@@ -43,6 +43,9 @@ class Cache:
             decompressed = zlib.decompress(content).decode("utf-8")
             json_data = json.loads(decompressed)
             return json_data
+
+    def get_caches(self):
+        return os.listdir(self.base_path)
 
     def remove(self, name: str):
         filename = op.join(self.base_path, name)

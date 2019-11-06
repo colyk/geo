@@ -1,27 +1,39 @@
 import json
 import time
-from pprint import pprint
+from collections import namedtuple
 from typing import List, Sequence
 
 import overpass
 import requests
 
+
 if __package__ is None or not __package__:
     from backend.geo.osm.osm_types import types
+    from backend.geo.cache import Cache
 else:
     from .osm_types import types
+    from ..cache import Cache
 
-
+Bbox = namedtuple('Bbox', ['min_lat', 'min_lon', 'max_lat', 'max_lon'])
 class OSMError(Exception):
     def __init__(self, message):
         super().__init__(message)
 
+
+def is_data_inside_bbox(data, bbox: Bbox) -> bool:
+    min_lat, min_lon, max_lat, max_lon = bbox
+    for point in data:
+        lat, lon = point
+        if lon < min_lon or lon > max_lon or lat < min_lat or lat > max_lat:
+            return False
+    return True
 
 class OSM:
     def __init__(self, responseformat: str = "geojson", debug: bool = False):
         self.api = overpass.API(timeout=60)
         self.responseformat = responseformat
         self.debug = debug
+        self.bbox_cache = Cache(prefix='bbox')
 
         self.default_el_classes = ["node", "way", "relation"]
 
@@ -62,18 +74,26 @@ class OSM:
 
     def fetch_by_bbox(
         self,
-        min_lat: float,
-        min_lon: float,
-        max_lat: float,
-        max_lon: float,
+        bbox: Bbox,
         el_type,
         el_classes: List[str] = None,
     ):
-        bbox = ",".join([str(min_lat), str(min_lon), str(max_lat), str(max_lon)])
-        return self.fetch(bbox, "way", el_type, el_classes)
+        caches = self.bbox_cache.get_caches()
+        sbbox = f"{bbox.min_lat}, {bbox.min_lon}, {bbox.max_lat}, {bbox.max_lon}"
+
+        for cache in caches:
+            d = cache.split(',')
+            d = list(map(float, d))
+            d = [[d[0], d[1]], [d[2], d[3]]]
+            if is_data_inside_bbox(d, bbox):
+                return self.bbox_cache.get(sbbox)
+
+        data = self.fetch(sbbox, "way", el_type, el_classes)
+
+        self.bbox_cache.add(sbbox, data)
+        return data
 
     def strip_data(self, data):
-        return data
         striped_data = str(data)
         for key in data["features"]:
             if not key["properties"]:
@@ -102,14 +122,17 @@ class OSM:
 
 
 if __name__ == "__main__":
-    osm = OSM()
-    data = osm.fetch(
-        "2904797",
-        "relation",
-        [["address_street", "Artura Grottgera"], "name", "building"],
-        ["way"],
-    )
-    # data = osm.fetch_by_bbox(51.1952, 22.5384, 51.2012, 22.5485, "_pedestrian_way")
+    osm = OSM(debug=True)
+    # data = osm.fetch(
+    #     "2904797",
+    #     "relation",
+    #     [["address_street", "Artura Grottgera"], "name", "building"],
+    #     ["way"],
+    # )
+    start = time.time()
+    bbox = Bbox(min_lat=51.1952, min_lon=22.5384, max_lat=51.2012, max_lon=22.5485)
+    data = osm.fetch_by_bbox(bbox, "_pedestrian_way")
+    print(f'Fetch took {time.time() - start}')
     # data = osm.fetch(
     #     "2904797",
     #     "relation",
