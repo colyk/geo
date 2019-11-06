@@ -1,4 +1,5 @@
 import json
+import time
 
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
@@ -17,12 +18,19 @@ class Path(View):
         bbox = get_bbox(points)
         osm = OSM(debug=True)
         print('Before OSM')
-        geojson = osm.fetch_by_bbox(*bbox, el_type="footway")
+        geojson = osm.fetch_by_bbox(*bbox, el_type="_pedestrian_way")
         print('Before Graph')
+        with open('test', 'w') as f:
+            f.write(json.dumps(geojson))
+        graph_build_time = time.time()
         graph = create_graph_from_geojson(geojson)
+        print(f'Build graph took {time.time() - graph_build_time}')
         f_node, *_, l_node = tuple(sorted(graph.nodes, key=lambda n: n.name))
         print('Before Dijkstra')
+        dijkstra_time = time.time()
         path = dijkstra(graph, f_node, l_node)
+        print(f'Dijkstra took {time.time() - dijkstra_time}')
+
         print('After Dijkstra')
         path = [[float(round(n.y, 6)), float(round(n.x, 6))] for n in path]
         print(path)

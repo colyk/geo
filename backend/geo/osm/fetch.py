@@ -1,8 +1,10 @@
 import json
 import time
+from pprint import pprint
 from typing import List, Sequence
 
 import overpass
+import requests
 
 if __package__ is None or not __package__:
     from backend.geo.osm.osm_types import types
@@ -30,6 +32,8 @@ class OSM:
         el_type: List[Sequence[str]],
         el_classes: List[str] = None,
     ):
+        if self.debug:
+            self.status()
         if el_classes is None:
             el_classes = self.default_el_classes
 
@@ -52,6 +56,10 @@ class OSM:
             print(f'Filter time {time.time() - time_filter}')
         return filtered
 
+    def status(self):
+        r = requests.get('https://overpass-api.de/api/status')
+        print(r.text)
+
     def fetch_by_bbox(
         self,
         min_lat: float,
@@ -65,6 +73,7 @@ class OSM:
         return self.fetch(bbox, "way", el_type, el_classes)
 
     def strip_data(self, data):
+        return data
         striped_data = str(data)
         for key in data["features"]:
             if not key["properties"]:
