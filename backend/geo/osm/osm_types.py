@@ -1,6 +1,6 @@
 types = {
     "_car_way": "motorway|motorway_link|primary|primary_link|secondary|secondary_link|tertiary|tertiary_link|residential|living_street|service_road|unclassified",
-    "_pedestrian_way": "footway|steps|path|track",
+    "_pedestrian_way": "footway|steps|path|track|pedestrian_street",
     "address_housenumber": '["addr:housenumber"]',
     "address_street": '["addr:street"]',
     "attraction": "[tourism=attraction]",
@@ -24,6 +24,7 @@ types = {
     "parking": "[amenity=parking]",
     "path": "[highway=path]",
     "pedestrian": "[highway=pedestrian]",
+    "pedestrian_street": "[highway=pedestrian]",
     "polish_city": '["name:prefix"="miasto"]',
     "postcode": '["addr:postcode"]',
     "primary": "[highway=primary]",

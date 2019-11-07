@@ -39,7 +39,7 @@ class OSM:
 
         self.default_el_classes = ["node", "way", "relation"]
 
-    def fetch(self, q: str, ref_class: str, el_type, el_classes=None):
+    def fetch(self, delimiter, el_type, el_classes=None):
         if self.debug:
             self.status()
         if el_classes is None:
@@ -47,10 +47,17 @@ class OSM:
 
         selector = self.type_to_selector(el_type)
 
-        query = f"{ref_class}({q});\nmap_to_area->.a;\n(\n"
-        for el_class in el_classes:
-            for val in selector:
-                query += f"\t{el_class}(area .a){val};\n"
+        if isinstance(delimiter, List):
+            query = f"{delimiter[1]}({delimiter[0]});\nmap_to_area->.a;\n(\n"
+            for el_class in el_classes:
+                for val in selector:
+                    query += f"\t{el_class}(area .a){val};\n"
+        else:
+            query = f"(\n"
+            for el_class in el_classes:
+                for val in selector:
+                    query += f"\t{el_class}{val}({bbox});\n"
+
         query += ");\n(._;>;);"
 
         if self.debug:
@@ -80,7 +87,7 @@ class OSM:
             if is_data_inside_bbox(d, bbox):
                 return self.bbox_cache.get(q_bbox)
 
-        data = self.fetch(q_bbox, "way", el_type, el_classes)
+        data = self.fetch(q_bbox, el_type, el_classes)
         self.bbox_cache.add(q_bbox, data)
         return data
 
@@ -115,14 +122,13 @@ class OSM:
 if __name__ == "__main__":
     osm = OSM(debug=True)
     # data = osm.fetch(
-    #     "2904797",
-    #     "relation",
+    #     ["2904797", "relation"],
     #     [["address_street", "Artura Grottgera"], "name", "building"],
     #     ["way"],
     # )
     start = time.time()
-    bbox = Bbox(min_lat=51.1952, min_lon=22.5384, max_lat=51.2012, max_lon=22.5485)
-    data = osm.fetch_by_bbox(bbox, "_pedestrian_way")
+    bbox = Bbox(min_lat=51.2457, min_lon=22.5633, max_lat=51.2514, max_lon=22.5727)
+    data = osm.fetch_by_bbox(bbox, "_pedestrian_way", ["way"])
     print(f"Fetch took {time.time() - start}")
     # data = osm.fetch(
     #     "2904797",
