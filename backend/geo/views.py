@@ -8,6 +8,7 @@ from django.views.generic.base import View
 from .graph.algorithm.dijkstra import dijkstra
 from .osm.geojson_tools import create_graph_from_geojson
 from .osm.fetch import OSM
+from .osm.geo_types import Bbox
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -18,7 +19,7 @@ class Path(View):
         bbox = get_bbox(points)
         osm = OSM(debug=True)
         print("Before OSM")
-        geojson = osm.fetch_by_bbox(*bbox, el_type="_pedestrian_way")
+        geojson = osm.fetch_by_bbox(bbox, el_type="_pedestrian_way")
         print("Before Graph")
         with open("test", "w") as f:
             f.write(json.dumps(geojson))
@@ -53,4 +54,4 @@ def get_bbox(data):
         if lat > max_lat:
             max_lat = lat
 
-    return min_lat, min_lon, max_lat, max_lon
+    return Bbox(min_lat, min_lon, max_lat, max_lon)

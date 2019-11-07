@@ -1,6 +1,6 @@
 import json
 import time
-from typing import List, Sequence
+from typing import List
 
 import overpass
 import requests
@@ -72,7 +72,7 @@ class OSM:
 
     def fetch_by_bbox(self, bbox: Bbox, el_type, el_classes: List[str] = None):
         caches = self.bbox_cache.get_caches()
-        q_bbox = f"{bbox.min_lat}, {bbox.min_lon}, {bbox.max_lat}, {bbox.max_lon}"
+        q_bbox = str(bbox)
 
         for cache in caches:
             d = list(map(float, cache.split(",")))
