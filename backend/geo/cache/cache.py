@@ -1,9 +1,10 @@
 import json
 import os
 import os.path as op
+import pickle
 import shutil
 import zlib
-from typing import Dict, Union, List
+from typing import Dict, Union, List, Any
 
 
 class Cache:
@@ -21,15 +22,28 @@ class Cache:
 
         self.compress_level = params.get("compress_level", 5)
 
-    def add(self, name: str, data: Dict, format_: str = "json"):
-        name = str(name)
+        self.formats = ["json", "object"]
+
+    def add(self, name: str, data: Any, format_: str = "json"):
+        if format_ not in self.formats:
+            raise TypeError(
+                f"Unknown format: {format_}.\nAvailable formats: {self.formats}"
+            )
         filename = op.join(self.base_path, name)
         if format_ == "json":
             self._add_json(filename, data)
+        elif format_ == "object":
+            self._add_object(filename, data)
 
-    def _add_json(self, filename: str, data: Dict):
+    def _add_json(self, filename: str, data: Any):
         json_data = json.dumps(data).encode("utf-8")
         compressed = zlib.compress(json_data, self.compress_level)
+        with open(filename, "bw") as f:
+            f.write(compressed)
+
+    def _add_object(self, filename: str, data: Any):
+        pickled_data = pickle.dumps(data)
+        compressed = zlib.compress(pickled_data, self.compress_level)
         with open(filename, "bw") as f:
             f.write(compressed)
 
@@ -39,16 +53,20 @@ class Cache:
             return None
 
         with open(filename, "br") as f:
-            decompressed = zlib.decompress(f.read()).decode("utf-8")
-            json_data = json.loads(decompressed)
-            return json_data
+            decompressed = zlib.decompress(f.read())
+            try:
+                return json.loads(decompressed)
+            except UnicodeDecodeError:
+                return pickle.loads(decompressed)
 
-    def get_caches(self) -> List[str]:
+    @property
+    def caches(self) -> List[str]:
         return os.listdir(self.base_path)
 
-    def remove(self, name: str):
+    def invalidate(self, name: str):
         filename = op.join(self.base_path, name)
         os.remove(filename)
 
     def invalidate_all(self) -> None:
         shutil.rmtree(self.base_path)
+        os.mkdir(self.base_path)

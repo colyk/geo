@@ -19,7 +19,9 @@ class Path(View):
         bbox = get_bbox(points)
         osm = OSM(debug=True)
         print("Before OSM")
+        osm_time = time.time()
         geojson = osm.fetch_by_bbox(bbox, el_type="_pedestrian_way")
+        print(f"OSM: {time.time() - osm_time}")
         print("Before Graph")
         with open("test", "w") as f:
             f.write(json.dumps(geojson))
