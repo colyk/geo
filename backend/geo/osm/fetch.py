@@ -131,8 +131,7 @@ if __name__ == "__main__":
     data = osm.fetch_by_bbox(bbox, "_pedestrian_way", ["way"])
     print(f"Fetch took {time.time() - start}")
     # data = osm.fetch(
-    #     "2904797",
-    #     "relation",
+    #     ["2904797", "relation"],
     #     [
     #         ["address_street", "Dolna Panny Marii"],
     #         ["address_housenumber", "28"],
