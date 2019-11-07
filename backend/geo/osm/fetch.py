@@ -17,12 +17,12 @@ else:
     from . import OSMError
 
 
-def is_data_inside_bbox(data, bbox: Bbox) -> bool:
+def is_data_inside_bbox(points, bbox: Bbox) -> bool:
     min_lat = bbox.min_lat
     min_lon = bbox.min_lon
     max_lat = bbox.max_lat
     max_lon = bbox.max_lon
-    for point in data:
+    for point in points:
         lat = point.lat
         lon = point.lon
         if lon < min_lon or lon > max_lon or lat < min_lat or lat > max_lat:
@@ -71,7 +71,7 @@ class OSM:
         print(r.text)
 
     def fetch_by_bbox(self, bbox: Bbox, el_type, el_classes: List[str] = None):
-        caches = self.bbox_cache.get_caches()
+        caches = self.bbox_cache.caches
         q_bbox = str(bbox)
 
         for cache in caches:
