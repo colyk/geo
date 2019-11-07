@@ -99,7 +99,7 @@ export default {
     },
     zoomUpdated(zoom) {
       this.zoom = zoom; // from 0 to 18
-      this.circleRadius = 1145 - (this.zoom + 1) * 60;
+      this.circleRadius = 385 - (this.zoom + 1) * 20;
     },
     centerUpdated(center) {
       this.center = center;

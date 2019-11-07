@@ -2,6 +2,7 @@ from itertools import combinations
 
 from django.test import TestCase
 
+from .floyd_warshall import floyd_warshall
 from .prim import prim
 from .dijkstra import dijkstra
 from ..graph import Node, Edge, Graph

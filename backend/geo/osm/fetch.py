@@ -56,7 +56,7 @@ class OSM:
             query = f"(\n"
             for el_class in el_classes:
                 for val in selector:
-                    query += f"\t{el_class}{val}({bbox});\n"
+                    query += f"\t{el_class}{val}({delimiter});\n"
 
         query += ");\n(._;>;);"
 

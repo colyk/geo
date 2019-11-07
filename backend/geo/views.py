@@ -20,7 +20,7 @@ class Path(View):
         osm = OSM(debug=True)
         print("Before OSM")
         osm_time = time.time()
-        geojson = osm.fetch_by_bbox(bbox, el_type="_pedestrian_way")
+        geojson = osm.fetch_by_bbox(bbox, "_pedestrian_way", ["way"])
         print(f"OSM: {time.time() - osm_time}")
         print("Before Graph")
         with open("test", "w") as f:
