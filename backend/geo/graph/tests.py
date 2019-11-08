@@ -114,7 +114,7 @@ class GraphCase(TestCase):
         self.g.add_nodes([self.node1, self.node2, self.node3])
         self.g.add_edges([self.edge1, self.edge2, self.edge3])
 
-        matrix = self.g.matrix().matrix
+        matrix = self.g.matrix.matrix
         rows, columns = matrix.shape
         self.assertEqual(rows, 3)
         self.assertEqual(columns, 3)

@@ -144,6 +144,7 @@ class Graph:
                     json[node.name][conn_node.name] = edge.weight
         return json
 
+    @property
     def matrix(self) -> AdjacencyMatrix:
         return AdjacencyMatrix(self)
 
@@ -170,5 +171,5 @@ if __name__ == "__main__":
     print(g)
     pprint(g.json())
 
-    m = g.matrix()
+    m = g.matrix
     print(m.matrix)

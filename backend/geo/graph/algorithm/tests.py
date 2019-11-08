@@ -2,7 +2,7 @@ from itertools import combinations
 
 from django.test import TestCase
 
-from .floyd_warshall import floyd_warshall
+from .floyd_warshall import floyd_warshall, get_path
 from .prim import prim
 from .dijkstra import dijkstra
 from ..graph import Node, Edge, Graph
@@ -60,3 +60,22 @@ class PrimCase(TestCase):
 
         self.assertEqual(len(g_.nodes), len(nodes))
         self.assertEqual(len(g_.edges), 3)
+
+
+class FloydWarshallCase(TestCase):
+    def test_floyd_warshall_algorithm(self):
+        g = Graph()
+        nodes = [
+            Node("A", (0, 0)),
+            Node("B", (3, 3)),
+            Node("C", (6, 0)),
+            Node("D", (3, 1.5)),
+        ]
+        edges_combinations = list(combinations(nodes, 2))
+        edges = [Edge(node1, node2) for node1, node2 in edges_combinations]
+        g.add_nodes(nodes).add_edges(edges)
+
+        g_ = floyd_warshall(g)
+
+        self.assertEqual(1, 1)
+        get_path(g_, 0, 3)
