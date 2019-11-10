@@ -85,19 +85,23 @@ class OSM:
             d = list(map(float, cache.split(",")))
             d = [Coord(lat=d[0], lon=d[1]), Coord(lat=d[2], lon=d[3])]
             if is_data_inside_bbox(d, bbox):
-                return self.bbox_cache.get(q_bbox)
+                return self.bbox_cache.get(cache)
 
         data = self.fetch(q_bbox, el_type, el_classes)
+        data = self.strip_data(data)
         self.bbox_cache.add(q_bbox, data)
         return data
 
     def strip_data(self, data):
-        striped_data = str(data)
         for key in data["features"]:
             if not key["properties"]:
-                striped_data = striped_data.replace(str(key) + ", ", "")
-                striped_data = striped_data.replace(str(key), "")
-        return json.loads(striped_data)
+                data["features"].remove(key)
+            if key["geometry"]["type"] == "Point":
+                try:
+                    data["features"].remove(key)
+                except ValueError:
+                    pass
+        return data
 
     def type_to_selector(self, el_type):
         selector = ""
