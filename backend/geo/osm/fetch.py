@@ -96,11 +96,6 @@ class OSM:
         for key in data["features"]:
             if not key["properties"]:
                 data["features"].remove(key)
-            if key["geometry"]["type"] == "Point":
-                try:
-                    data["features"].remove(key)
-                except ValueError:
-                    pass
         return data
 
     def type_to_selector(self, el_type):

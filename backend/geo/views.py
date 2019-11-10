@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import View
 
-from .graph.algorithm.dijkstra import dijkstra
+from .graph.algorithm.a_star import a_star
 from .graph.graph import Graph
 from .osm.fetch import OSM
 from .osm.geo_types import Bbox, Coord
@@ -43,21 +43,20 @@ class Path(View):
         print(f"First node {f_node}")
         print(f"Second node {l_node}")
 
-        dijkstra_time = time.time()
-        path = dijkstra(graph, f_node, l_node)
-        print(f"Dijkstra took {time.time() - dijkstra_time}")
+        a_star_time = time.time()
+        path = a_star(graph, f_node, l_node)
+        print(f"A* took {time.time() - a_star_time}")
         if path is None:
             return JsonResponse({"path": points})
 
         path = [[float(round(n.lat, 7)), float(round(n.lon, 7))] for n in path]
         path.insert(0, points[0])
         path.append(points[-1])
-        print(path)
         return JsonResponse({"path": path})
 
 
 def get_bbox(data):
-    min_lat = min_lon = float("+inf")
+    min_lat = min_lon = float("inf")
     max_lat = max_lon = float("-inf")
     for point in data:
         lat = round(point[0], 7)

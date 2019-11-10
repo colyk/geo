@@ -31,14 +31,11 @@ def create_graph_from_geojson(geojson: Dict) -> Graph:
         n3, n4 = s_edge.edge
         if cmp_node(n1, n3):
             g.add_edge(Edge(n1, n3))
-
-        if cmp_node(n1, n4):
+        elif cmp_node(n1, n4):
             g.add_edge(Edge(n1, n4))
-
-        if cmp_node(n2, n3):
+        elif cmp_node(n2, n3):
             g.add_edge(Edge(n2, n3))
-
-        if cmp_node(n2, n4):
+        elif cmp_node(n2, n4):
             g.add_edge(Edge(n2, n4))
 
     return g

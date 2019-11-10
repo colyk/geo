@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import math
 from pprint import pprint
-from typing import List, Union, Dict, Any, Set
+from typing import List, Union, Dict, Any, Set, Iterator
 
 import numpy as np
 
@@ -54,7 +54,10 @@ class Node:
         )
 
     def __repr__(self):
-        return "name: {}, x: {:.6f}, y: {:.6f}".format(self.name, self.lon, self.lat)
+        return f"name: {self.name}, lon: {self.lon:.6f}, lat: {self.lat:.6f}"
+
+    def __gt__(self, other):
+        return self.name > other.name
 
     def __hash__(self):
         return hash(repr(self))
@@ -72,7 +75,7 @@ class Edge:
 
     def __repr__(self):
         f_node, s_node = self.edge
-        return "{} {} - weight: {:.6f}".format(f_node, s_node, self.weight)
+        return f"{f_node} {s_node} - weight: {self.weight:.6f}"
 
     def __hash__(self):
         return hash(repr(self))
@@ -112,14 +115,12 @@ class Graph:
     def has_edge(self, edge: Edge) -> bool:
         return any(filter(lambda e: e.edge == edge.edge, self.edges))  # type: ignore
 
-    def get_connected_nodes(self, node: Node) -> List[Node]:
-        conn_nodes = []
+    def get_connected_nodes(self, node: Node) -> Iterator[Node]:
         for edge in self.edges:
             edge_difference = edge.edge - {node}
             if len(edge_difference) == 1:
                 conn_node, = edge_difference
-                conn_nodes.append(conn_node)
-        return conn_nodes
+                yield conn_node
 
     def get_node_edges(self, node: Node) -> List[Edge]:
         edges = []
