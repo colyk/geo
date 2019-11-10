@@ -16,6 +16,7 @@ class CacheCase(TestCase):
 
     def test_cache_adding_should_overwrite_current_data(self):
         c = Cache(prefix="test")
+        c.invalidate_all()
 
         c.add("test", {"test": "test"})
         c.add("test", {"test1": "test1"})
@@ -23,7 +24,8 @@ class CacheCase(TestCase):
         self.assertDictEqual(c.get("test"), {"test1": "test1"})
 
     def test_nonexistent_cache_get_should_not_rise_error(self):
-        c = Cache(prefix="test3")
+        c = Cache(prefix="test")
+        c.invalidate_all()
         self.assertIsNone(c.get("test"))
 
     def test_list_of_caches(self):
@@ -39,6 +41,22 @@ class CacheCase(TestCase):
         obj = {"test": "test"}
         c.add("test", obj, format_="object")
         self.assertDictEqual(c.get("test"), obj)
+
+    def test_raise_error_if_passed_nonexistent_format(self):
+        c = Cache(prefix="test")
+        c.invalidate_all()
+        obj = {"test": "test"}
+        with self.assertRaises(TypeError):
+            c.add("test", obj, format_="nonexistent_format")
+
+    def test_cache_name_operations(self):
+        c = Cache(prefix="test")
+        c.invalidate_all()
+        cache_name = c.create_cache_name(["str", ["lst"], {"obj": 1}])
+        self.assertEqual(cache_name, "str;['lst'];{'obj': 1}")
+
+        parsed_cache_name = c.parse_cache_name(cache_name)
+        self.assertEqual(parsed_cache_name, ["str", "['lst']", "{'obj': 1}"])
 
     def test_cache_invalidation(self):
         c = Cache(prefix="test")

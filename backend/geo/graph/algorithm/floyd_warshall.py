@@ -1,8 +1,6 @@
-from itertools import product
-
 import numpy as np
 
-from ..graph import Graph, Node, Edge
+from ..graph import Graph
 
 
 def floyd_warshall(graph: Graph):
@@ -27,10 +25,12 @@ def floyd_warshall(graph: Graph):
     return p
 
 
-def get_path(p, i, j):
+def get_path(path_matrix, start_index: int, end_index: int):
     path = []
 
     def find(p, i, j):
+        i = int(i)
+        j = int(j)
         if i == j:
             path.append(i)
         elif p[i][j] == float("-inf"):
@@ -40,5 +40,5 @@ def get_path(p, i, j):
             find(p, i, p[i][j])
             path.append(j)
 
-    find(p, i, j)
+    find(path_matrix, start_index, end_index)
     return path

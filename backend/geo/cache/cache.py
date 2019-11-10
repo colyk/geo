@@ -21,6 +21,7 @@ class Cache:
             os.mkdir(self.base_path)
 
         self.compress_level = params.get("compress_level", 5)
+        self.delimiter = params.get("delimiter", ";")
 
         self.formats = ["json", "object"]
 
@@ -70,3 +71,9 @@ class Cache:
     def invalidate_all(self) -> None:
         shutil.rmtree(self.base_path)
         os.mkdir(self.base_path)
+
+    def create_cache_name(self, params: List) -> str:
+        return self.delimiter.join(map(str, params))
+
+    def parse_cache_name(self, cache: str) -> List[str]:
+        return cache.split(self.delimiter)

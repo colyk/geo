@@ -1,6 +1,6 @@
 import json
 import time
-from typing import List
+from typing import List, Dict
 
 import overpass
 import requests
@@ -17,7 +17,7 @@ else:
     from . import OSMError
 
 
-def is_data_inside_bbox(points, bbox: Bbox) -> bool:
+def is_data_inside_bbox(points: List[Coord], bbox: Bbox) -> bool:
     min_lat = bbox.min_lat
     min_lon = bbox.min_lon
     max_lat = bbox.max_lat
@@ -37,13 +37,13 @@ class OSM:
         self.debug = debug
         self.bbox_cache = Cache(prefix="bbox")
 
-        self.default_el_classes = ["node", "way", "relation"]
+        self.el_classes = ["node", "way", "relation"]
 
     def fetch(self, delimiter, el_type, el_classes=None):
         if self.debug:
             self.status()
         if el_classes is None:
-            el_classes = self.default_el_classes
+            el_classes = self.el_classes
 
         selector = self.type_to_selector(el_type)
 
@@ -67,38 +67,48 @@ class OSM:
             query, responseformat=self.responseformat, verbosity="geom"
         )
         time_filter = time.time()
-        filtered = self.strip_data(response)
+        filtered = self.filter_geojson(response)
         if self.debug:
-            print(f"Fetch time {time.time() - time_fetch}")
+            print(f"Fetch time {time_filter - time_fetch}")
             print(f"Filter time {time.time() - time_filter}")
         return filtered
 
-    def status(self):
-        r = requests.get("https://overpass-api.de/api/status")
-        print(r.text)
+    @classmethod
+    def filter_geojson(cls, geojson: Dict) -> Dict:
+        """This method remove empty osm objects"""
+        features = []
+        for feature in geojson["features"]:
+            if feature["properties"]:
+                features.append(feature)
+        geojson["features"] = features
+        return geojson
 
-    def fetch_by_bbox(self, bbox: Bbox, el_type, el_classes: List[str] = None):
-        caches = self.bbox_cache.caches
-        q_bbox = str(bbox)
+    def fetch_by_bbox(self, bbox: Bbox, el_type: str, el_classes: List[str] = None):
+        for cache in self.bbox_cache.caches:
+            cache_bbox, cache_el_type, cache_el_classes = self.bbox_cache.parse_cache_name(
+                cache
+            )
+            if el_type != cache_el_type:
+                continue
+            if str(el_classes) != cache_el_classes:
+                continue
 
-        for cache in caches:
-            d = list(map(float, cache.split(",")))
-            d = [Coord(lat=d[0], lon=d[1]), Coord(lat=d[2], lon=d[3])]
+            cache_bbox = Bbox.parse(cache_bbox)
+            d = [
+                Coord(lat=cache_bbox.min_lat, lon=cache_bbox.min_lon),
+                Coord(lat=cache_bbox.max_lat, lon=cache_bbox.max_lon),
+            ]
             if is_data_inside_bbox(d, bbox):
                 return self.bbox_cache.get(cache)
 
-        data = self.fetch(q_bbox, el_type, el_classes)
-        data = self.strip_data(data)
-        self.bbox_cache.add(q_bbox, data)
-        return data
+        s_bbox = str(bbox)
+        geojson = self.fetch(s_bbox, el_type, el_classes)
+        cache_name = self.bbox_cache.create_cache_name([s_bbox, el_type, el_classes])
+        self.bbox_cache.add(cache_name, geojson)
+        return geojson
 
-    def strip_data(self, data):
-        for key in data["features"]:
-            if not key["properties"]:
-                data["features"].remove(key)
-        return data
-
-    def type_to_selector(self, el_type):
+    @classmethod
+    def type_to_selector(cls, el_type):
         selector = ""
         if isinstance(el_type, List):
             for i, val in enumerate(el_type):
@@ -117,6 +127,11 @@ class OSM:
             raise OSMError("Unknown el_type")
         return type_list
 
+    @classmethod
+    def status(cls):
+        res = requests.get("https://overpass-api.de/api/status")
+        print(res.text)
+
 
 if __name__ == "__main__":
     osm = OSM(debug=True)
@@ -125,10 +140,8 @@ if __name__ == "__main__":
     #     [["address_street", "Artura Grottgera"], "name", "building"],
     #     ["way"],
     # )
-    start = time.time()
     bbox = Bbox(min_lat=51.2457, min_lon=22.5633, max_lat=51.2514, max_lon=22.5727)
     data = osm.fetch_by_bbox(bbox, "_pedestrian_way", ["way"])
-    print(f"Fetch took {time.time() - start}")
     # data = osm.fetch(
     #     ["2904797", "relation"],
     #     [
@@ -137,7 +150,5 @@ if __name__ == "__main__":
     #         "building",
     #     ],
     # )
-    # data = osm.strip_data(data)
-    r = json.dumps(data, indent=4, sort_keys=True)
     with open("data.json", "w", encoding="utf-8") as f:
-        f.write(r)
+        f.write(json.dumps(data, indent=4, sort_keys=True))

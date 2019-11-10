@@ -26,7 +26,7 @@ class Path(View):
         print(f"OSM: {time.time() - osm_time}")
 
         with open("test", "w") as f:
-            f.write(json.dumps(geojson))
+            f.write(json.dumps(geojson, indent=4))
 
         graph_build_time = time.time()
         graph = create_graph_from_geojson(geojson)

@@ -13,7 +13,7 @@ def heuristic(start: Node, end: Node):
     return math.sqrt((s_lat - e_lat) ** 2 + (s_lon - e_lon) ** 2)
 
 
-def a_star(graph: Graph, start: Node, end: Node) -> List[Node]:
+def a_star(graph: Graph, start: Node, end: Node) -> Optional[List[Node]]:
     current_node = None
 
     frontier: PriorityQueue = PriorityQueue()
@@ -41,4 +41,8 @@ def a_star(graph: Graph, start: Node, end: Node) -> List[Node]:
         n_node: Optional[Node] = shortest_paths[current_node]
         current_node = n_node
 
-    return path[::-1]
+    path.reverse()
+    if path[-1] != end:
+        return None
+
+    return path

@@ -6,6 +6,7 @@ from ...osm import Coord as C
 from .floyd_warshall import floyd_warshall, get_path
 from .prim import prim
 from .dijkstra import dijkstra
+from .a_star import a_star
 from ..graph import Node, Edge, Graph
 
 
@@ -71,11 +72,50 @@ class FloydWarshallCase(TestCase):
             Node("C", C(6, 0)),
             Node("D", C(3, 1.5)),
         ]
-        edges_combinations = list(combinations(nodes, 2))
-        edges = [Edge(node1, node2) for node1, node2 in edges_combinations]
+        edges = [
+            Edge(nodes[0], nodes[1]),
+            Edge(nodes[1], nodes[2]),
+            Edge(nodes[2], nodes[3]),
+        ]
         g.add_nodes(nodes).add_edges(edges)
 
-        g_ = floyd_warshall(g)
+        path_matrix = floyd_warshall(g)
+        path = get_path(path_matrix, 0, 3)
+        self.assertEqual(path, [0, 1, 2, 3])
 
-        self.assertEqual(1, 1)
-        get_path(g_, 0, 3)
+        path = get_path(path_matrix, 1, 3)
+        self.assertEqual(path, [1, 2, 3])
+
+
+class AStartCase(TestCase):
+    def test_a_start_algorithm(self):
+        g = Graph()
+        node1 = Node("A", C(0, 0))
+        node2 = Node("B", C(0, 1))
+        node3 = Node("C", C(0, 2))
+        g.add_nodes([node1, node2, node3])
+
+        edge1 = Edge(node1, node2)
+        edge2 = Edge(node2, node3)
+        g.add_edges([edge1, edge2])
+
+        path = a_star(g, node1, node3)
+
+        self.assertEqual(len(path), 3)
+        self.assertIs(path[0], node1)
+        self.assertIs(path[1], node2)
+        self.assertIs(path[2], node3)
+
+    def test_a_star_algorithm_without_solution(self):
+        g = Graph()
+
+        node1 = Node("A", C(0, 0))
+        node2 = Node("B", C(0, 1))
+        node3 = Node("C", C(0, 2))
+        g.add_nodes([node1, node2, node3])
+
+        edge1 = Edge(node1, node2)
+        g.add_edge(edge1)
+
+        path = a_star(g, node1, node3)
+        self.assertIsNone(path)
