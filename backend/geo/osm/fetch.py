@@ -95,10 +95,10 @@ class OSM:
 
             cache_bbox = Bbox.parse(cache_bbox)
             d = [
-                Coord(lat=cache_bbox.min_lat, lon=cache_bbox.min_lon),
-                Coord(lat=cache_bbox.max_lat, lon=cache_bbox.max_lon),
+                Coord(lat=bbox.min_lat, lon=bbox.min_lon),
+                Coord(lat=bbox.max_lat, lon=bbox.max_lon),
             ]
-            if is_data_inside_bbox(d, bbox):
+            if is_data_inside_bbox(d, cache_bbox):
                 return self.bbox_cache.get(cache)
 
         s_bbox = str(bbox)

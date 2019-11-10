@@ -46,7 +46,10 @@ class Node:
     def __add__(self, other: Node):
         """https://janakiev.com/blog/gps-points-distance-python/"""
 
-        return math.sqrt((self.lon - other.lon) ** 2 + (self.lat - other.lat) ** 2)
+        return math.sqrt(
+            (self.lon - other.lon) * (self.lon - other.lon)
+            + (self.lat - other.lat) * (self.lat - other.lat)
+        )
 
     def __eq__(self, other):
         return (

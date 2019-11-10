@@ -1,5 +1,5 @@
 import json
-import math
+from math import sqrt
 import time
 
 from django.http import JsonResponse
@@ -81,8 +81,12 @@ def find_nearest_node(graph: Graph, destination: Coord):
     min_distance = float("inf")
 
     for node in graph.nodes:
-        distance = math.sqrt((node.lat - d_lat) ** 2 + (node.lon - d_lon) ** 2)
+        distance = calc_distance(node.lat, d_lat, node.lon, d_lon)
         if distance < min_distance:
             min_distance = distance
             nearest_node = node
     return nearest_node
+
+
+def calc_distance(x1, x2, y1, y2):
+    return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
