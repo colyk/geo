@@ -2,6 +2,7 @@ from itertools import combinations
 
 from django.test import TestCase
 
+from ...osm import Coord as C
 from .floyd_warshall import floyd_warshall, get_path
 from .prim import prim
 from .dijkstra import dijkstra
@@ -11,10 +12,9 @@ from ..graph import Node, Edge, Graph
 class DijkstraCase(TestCase):
     def test_dijkstra_algorithm(self):
         g = Graph()
-
-        node1 = Node("A", (0, 0))
-        node2 = Node("B", (0, 1))
-        node3 = Node("C", (0, 2))
+        node1 = Node("A", C(0, 0))
+        node2 = Node("B", C(0, 1))
+        node3 = Node("C", C(0, 2))
         g.add_nodes([node1, node2, node3])
 
         edge1 = Edge(node1, node2)
@@ -31,9 +31,9 @@ class DijkstraCase(TestCase):
     def test_dijkstra_algorithm_without_solution(self):
         g = Graph()
 
-        node1 = Node("A", (0, 0))
-        node2 = Node("B", (0, 1))
-        node3 = Node("C", (0, 2))
+        node1 = Node("A", C(0, 0))
+        node2 = Node("B", C(0, 1))
+        node3 = Node("C", C(0, 2))
         g.add_nodes([node1, node2, node3])
 
         edge1 = Edge(node1, node2)
@@ -47,10 +47,10 @@ class PrimCase(TestCase):
     def test_prim_algorithm(self):
         g = Graph()
         nodes = [
-            Node("A", (0, 0)),
-            Node("B", (3, 3)),
-            Node("C", (6, 0)),
-            Node("D", (3, 1.5)),
+            Node("A", C(0, 0)),
+            Node("B", C(3, 3)),
+            Node("C", C(6, 0)),
+            Node("D", C(3, 1.5)),
         ]
         edges_combinations = list(combinations(nodes, 2))
         edges = [Edge(node1, node2) for node1, node2 in edges_combinations]
@@ -66,10 +66,10 @@ class FloydWarshallCase(TestCase):
     def test_floyd_warshall_algorithm(self):
         g = Graph()
         nodes = [
-            Node("A", (0, 0)),
-            Node("B", (3, 3)),
-            Node("C", (6, 0)),
-            Node("D", (3, 1.5)),
+            Node("A", C(0, 0)),
+            Node("B", C(3, 3)),
+            Node("C", C(6, 0)),
+            Node("D", C(3, 1.5)),
         ]
         edges_combinations = list(combinations(nodes, 2))
         edges = [Edge(node1, node2) for node1, node2 in edges_combinations]

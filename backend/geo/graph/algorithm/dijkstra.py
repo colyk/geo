@@ -1,12 +1,11 @@
-from pprint import pprint
 from typing import Union, List, Dict, Tuple
 
-from ..graph import Graph, Node, Edge
+from ..graph import Graph, Node
 
 
-def dijkstra(graph: Graph, initial: Node, end: Node) -> Union[List[Node], None]:
-    shortest_paths: Dict[Node, Tuple] = {initial: (None, 0)}
-    current_node = initial
+def dijkstra(graph: Graph, start: Node, end: Node) -> Union[List[Node], None]:
+    shortest_paths: Dict[Node, Tuple] = {start: (None, 0)}
+    current_node = start
     visited_nodes = set()
 
     while current_node != end:
@@ -40,20 +39,3 @@ def dijkstra(graph: Graph, initial: Node, end: Node) -> Union[List[Node], None]:
         current_node = next_node
 
     return path[::-1]
-
-
-if __name__ == "__main__":
-    g = Graph()
-
-    node1 = Node("A", (0, 0))
-    node2 = Node("B", (0, 1))
-    node3 = Node("C", (0, 2))
-    g.add_nodes([node1, node2, node3])
-
-    edge1 = Edge(node1, node2)
-    edge2 = Edge(node2, node3)
-    g.add_edges([edge1, edge2])
-
-    r = dijkstra(g, node1, node3)
-
-    pprint(r)

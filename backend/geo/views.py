@@ -49,7 +49,7 @@ class Path(View):
         if path is None:
             return JsonResponse({"path": points})
 
-        path = [[float(round(n.y, 7)), float(round(n.x, 7))] for n in path]
+        path = [[float(round(n.lat, 7)), float(round(n.lon, 7))] for n in path]
         path.insert(0, points[0])
         path.append(points[-1])
         print(path)
@@ -81,16 +81,9 @@ def find_nearest_node(graph: Graph, destination: Coord):
     nearest_node = None
     min_distance = float("inf")
 
-    for node in sorted(graph.nodes, key=lambda n: n.name):
-        n_lat = float(node.y)
-        n_lon = float(node.x)
-
-        distance = haversine(n_lat, n_lon, d_lat, d_lon)
+    for node in graph.nodes:
+        distance = math.sqrt((node.lat - d_lat) ** 2 + (node.lon - d_lon) ** 2)
         if distance < min_distance:
             min_distance = distance
             nearest_node = node
     return nearest_node
-
-
-def haversine(lat1: float, lon1: float, lat2: float, lon2: float):
-    return math.sqrt((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2)

@@ -1,11 +1,8 @@
 from itertools import combinations
-from pprint import pprint
 from typing import Dict
 
-import geojson
-
-from ..graph.algorithm.dijkstra import dijkstra
 from ..graph.graph import Node, Graph, Edge
+from ..osm import Coord
 
 
 def create_graph_from_geojson(geojson: Dict) -> Graph:
@@ -20,7 +17,8 @@ def create_graph_from_geojson(geojson: Dict) -> Graph:
 
         prev_node = None
         for coord in coords:
-            n = Node(name, coord, meta)
+            c = Coord(lon=coord[0], lat=coord[1])
+            n = Node(name, c, meta)
             g.add_node(n)
             if prev_node is not None:
                 g.add_edge(Edge(n, prev_node))
@@ -47,17 +45,8 @@ def create_graph_from_geojson(geojson: Dict) -> Graph:
 
 
 def cmp_node(f_node, s_node):
-    return f_node.x == s_node.x and f_node.y == s_node.y and f_node.name != s_node.name
-
-
-if __name__ == "__main__":
-    # TODO: Make id of node unique. Add to node osm_id serial number of coord
-    with open("export.geojson", "r", encoding="utf-8") as f:
-        content = f.read()
-        geojson = geojson.loads(content)
-        graph = create_graph_from_geojson(geojson)
-        print(graph)
-        f_node, *_, l_node = tuple(sorted(graph.nodes, key=lambda n: n.name))
-        path = dijkstra(graph, f_node, l_node)
-        print("Shortest path: ")
-        pprint(path)
+    return (
+        f_node.lon == s_node.lon
+        and f_node.lat == s_node.lat
+        and f_node.name != s_node.name
+    )

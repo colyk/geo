@@ -1,18 +1,11 @@
 from django.test import TestCase
 
+from ..osm import Coord as C
 from .graph import Node, Edge, Graph
-from .utils import create_graph_from_geo_data, get_lines_intersection_point
+from .utils import get_lines_intersection_point
 
 
 class UtilsCase(TestCase):
-    def setUp(self) -> None:
-        self.data = [[0, 0], [1, 1], [2, 2], [3, 3]]
-
-    def test_creating_graph_from_geo_data(self):
-        g = create_graph_from_geo_data(self.data)
-        self.assertEqual(len(g.nodes), 4)
-        self.assertEqual(len(g.edges), 6)
-
     def test_lines_intersection_point(self):
         line1 = ((0, 1), (3, 1))
         line2 = ((1, 0), (1, 3))
@@ -27,8 +20,8 @@ class UtilsCase(TestCase):
 
 class NodeCase(TestCase):
     def setUp(self) -> None:
-        self.node1 = Node(1, (0, 0))
-        self.node2 = Node(2, (0, 1))
+        self.node1 = Node(1, C(0, 0))
+        self.node2 = Node(2, C(0, 1))
 
     def test_adding_nodes_return_distance(self):
         distance = self.node1 + self.node2
@@ -37,19 +30,19 @@ class NodeCase(TestCase):
 
 class EdgeCase(TestCase):
     def test_edges_could_be_compared(self):
-        edge1 = Edge(Node(1, (0, 0)), Node(2, (0, 1)))
-        edge2 = Edge(Node(1, (0, 0)), Node(2, (0, 1)))
+        edge1 = Edge(Node(1, C(0, 0)), Node(2, C(0, 1)))
+        edge2 = Edge(Node(1, C(0, 0)), Node(2, C(0, 1)))
         self.assertTrue(edge1 == edge2)
 
-        edge2 = Edge(Node(1, (0, 0)), Node(2, (0, 10)))
+        edge2 = Edge(Node(1, C(0, 0)), Node(2, C(0, 10)))
         self.assertFalse(edge1 == edge2)
 
 
 class GraphCase(TestCase):
     def setUp(self) -> None:
-        self.node1 = Node(1, (0, 1))
-        self.node2 = Node(2, (0, 2))
-        self.node3 = Node(3, (0, 3))
+        self.node1 = Node(1, C(0, 1))
+        self.node2 = Node(2, C(0, 2))
+        self.node3 = Node(3, C(0, 3))
 
         self.edge1 = Edge(self.node1, self.node2)
         self.edge2 = Edge(self.node2, self.node3)

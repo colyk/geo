@@ -1,18 +1,17 @@
 from __future__ import annotations
 
 import math
-from decimal import Decimal, getcontext
 from pprint import pprint
-from typing import List, Tuple, Union, Dict, Any, Set, Callable
+from typing import List, Union, Dict, Any, Set
 
 import numpy as np
+
+from ..osm import Coord
 
 """
     Todo:
     Draw graph function
-    Graph to adjacency matrix
 """
-getcontext().prec = 10
 
 
 class AdjacencyMatrix:
@@ -34,30 +33,28 @@ class AdjacencyMatrix:
 
 
 class Node:
-    __slots__ = ["name", "meta", "x", "y"]
+    __slots__ = ["name", "meta", "lon", "lat"]
 
     def __init__(
-        self,
-        name: Union[str, int],
-        cords: Tuple[float, float],
-        meta: Union[Dict, None] = None,
+        self, name: Union[str, int], cords: Coord, meta: Union[Dict, None] = None
     ):
         self.meta = meta
         self.name = name
-        x, y = cords
-        self.x = Decimal(x)
-        self.y = Decimal(y)
+        self.lon = cords.lon
+        self.lat = cords.lat
 
     def __add__(self, other: Node):
         """https://janakiev.com/blog/gps-points-distance-python/"""
 
-        return math.sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
+        return math.sqrt((self.lon - other.lon) ** 2 + (self.lat - other.lat) ** 2)
 
     def __eq__(self, other):
-        return self.name == other.name and self.x == other.x and self.y == other.y
+        return (
+            self.name == other.name and self.lon == other.lon and self.lat == other.lat
+        )
 
     def __repr__(self):
-        return "name: {}, x: {:.6f}, y: {:.6f}".format(self.name, self.x, self.y)
+        return "name: {}, x: {:.6f}, y: {:.6f}".format(self.name, self.lon, self.lat)
 
     def __hash__(self):
         return hash(repr(self))
@@ -68,7 +65,7 @@ class Edge:
 
     def __init__(self, f_node: Node, s_node: Node):
         self.edge = frozenset([f_node, s_node])
-        self.weight = Decimal(f_node + s_node)
+        self.weight = f_node + s_node
 
     def __eq__(self, other):
         return self.edge == other.edge
@@ -161,8 +158,10 @@ class Graph:
 
 if __name__ == "__main__":
     g = Graph()
-    lublin = Node("Lublin", (0, 0))
-    warsaw = Node("Warsaw", (10, 10))
+    c1 = Coord(0, 0)
+    c2 = Coord(10, 10)
+    lublin = Node("Lublin", c1)
+    warsaw = Node("Warsaw", c2)
 
     w_l_edge = Edge(warsaw, lublin)
     g.add_nodes([warsaw, lublin])
