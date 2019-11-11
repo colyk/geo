@@ -1,18 +1,18 @@
-import math
+from math import sqrt
 from queue import PriorityQueue
 from typing import Dict, List, Optional
+
+from numba import jit
 
 from ..graph import Graph, Node
 
 
-def heuristic(start: Node, end: Node):
-    s_lat = start.lat
-    s_lon = start.lon
-    e_lat = end.lat
-    e_lon = end.lon
-    return math.sqrt((s_lat - e_lat) ** 2 + (s_lon - e_lon) ** 2)
+@jit(fastmath=True)
+def heuristic(s_lat, s_lon, e_lat, e_lon):
+    return sqrt((s_lat - e_lat) * (s_lat - e_lat) + (s_lon - e_lon) * (s_lon - e_lon))
 
 
+@jit(forceobj=True, parallel=True)
 def a_star(graph: Graph, start: Node, end: Node) -> Optional[List[Node]]:
     current_node = None
 
@@ -31,7 +31,9 @@ def a_star(graph: Graph, start: Node, end: Node) -> Optional[List[Node]]:
             new_cost = (current_node + next_node) + costs[current_node]
             if next_node not in costs or new_cost < costs[next_node]:
                 costs[next_node] = new_cost
-                priority = new_cost + heuristic(end, next_node)
+                priority = new_cost + heuristic(
+                    end.lat, end.lon, next_node.lat, next_node.lon
+                )
                 frontier.put((priority, next_node))
                 shortest_paths[next_node] = current_node
 

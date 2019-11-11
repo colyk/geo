@@ -1,10 +1,13 @@
 from itertools import combinations
 from typing import Dict
 
+from numba import jit
+
 from ..graph.graph import Node, Graph, Edge
 from ..osm import Coord
 
 
+@jit(forceobj=True, parallel=True)
 def create_graph_from_geojson(geojson: Dict) -> Graph:
     g = Graph()
     for feature in geojson["features"]:
@@ -19,6 +22,8 @@ def create_graph_from_geojson(geojson: Dict) -> Graph:
         for coord in coords:
             c = Coord(lon=coord[0], lat=coord[1])
             n = Node(name, c, meta)
+            if prev_node is not None and n == prev_node:
+                continue
             g.add_node(n)
             if prev_node is not None:
                 g.add_edge(Edge(n, prev_node))

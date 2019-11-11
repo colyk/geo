@@ -4,6 +4,7 @@ from typing import List, Dict
 
 import overpass
 import requests
+from numba import jit
 
 if __package__ is None or not __package__:
     from backend.geo.osm.osm_types import types
@@ -17,6 +18,7 @@ else:
     from . import OSMError
 
 
+@jit(forceobj=True, parallel=True)
 def is_data_inside_bbox(points: List[Coord], bbox: Bbox) -> bool:
     min_lat = bbox.min_lat
     min_lon = bbox.min_lon
