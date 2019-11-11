@@ -22,7 +22,7 @@ def create_graph_from_geojson(geojson: Dict) -> Graph:
         for coord in coords:
             c = Coord(lon=coord[0], lat=coord[1])
             n = Node(name, c, meta)
-            if prev_node is not None and n == prev_node:
+            if prev_node is not None and cmp_node(n, prev_node):
                 continue
             g.add_node(n)
             if prev_node is not None:

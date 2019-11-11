@@ -12,7 +12,7 @@ def heuristic(s_lat, s_lon, e_lat, e_lon):
     return sqrt((s_lat - e_lat) * (s_lat - e_lat) + (s_lon - e_lon) * (s_lon - e_lon))
 
 
-@jit(forceobj=True, parallel=True)
+@jit(forceobj=True)
 def a_star(graph: Graph, start: Node, end: Node) -> Optional[List[Node]]:
     current_node = None
 
