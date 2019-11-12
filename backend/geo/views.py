@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import View
-from numba import jit
+from numba import jit, njit
 
 from .cache import Cache
 from .graph.algorithm.a_star import a_star
@@ -26,15 +26,14 @@ class Path(View):
         bbox = get_bbox(points)
         graph = get_graph_cache(graph_cache, bbox)
 
-        osm = OSM(debug=True)
-        osm_time = time.time()
-        geojson = osm.fetch_by_bbox(bbox, "_pedestrian_way", ["way"])
-        print(f"OSM: {time.time() - osm_time}")
-
-        with open("test", "w") as f:
-            f.write(json.dumps(geojson, indent=4))
-
         if graph is None:
+            osm = OSM(debug=True)
+            osm_time = time.time()
+            geojson = osm.fetch_by_bbox(bbox, "_pedestrian_way", ["way"])
+            print(f"OSM: {time.time() - osm_time}")
+
+            with open("test", "w") as f:
+                f.write(json.dumps(geojson, indent=4))
             graph_build_time = time.time()
             graph = create_graph_from_geojson(geojson)
             s_bbox = str(bbox)
@@ -128,6 +127,6 @@ def find_nearest_node(graph: Graph, destination: Coord):
     return nearest_node
 
 
-@jit(fastmath=True)
+@njit(fastmath=True)
 def calc_distance(x1, x2, y1, y2):
     return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))

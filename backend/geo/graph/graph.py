@@ -5,6 +5,7 @@ from pprint import pprint
 from typing import List, Union, Dict, Any, Set, Iterator
 
 import numpy as np
+from numba import jit
 
 from ..osm import Coord
 
@@ -43,6 +44,7 @@ class Node:
         self.lon = cords.lon
         self.lat = cords.lat
 
+    @jit(forceobj=True, fastmath=True)
     def __add__(self, other: Node):
         """https://janakiev.com/blog/gps-points-distance-python/"""
 
