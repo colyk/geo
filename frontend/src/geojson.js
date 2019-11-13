@@ -1,2 +1,3 @@
-var GeoJSON = require('geojson');
-export default GeoJSON
+const GeoJSON = require('geojson');
+
+export default GeoJSON;

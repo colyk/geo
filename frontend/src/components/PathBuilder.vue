@@ -36,6 +36,12 @@
                   <v-list-item-title>Lng: {{ point[1] }}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
+              <v-list-item v-if="pathLength">
+                <v-list-item-content>
+                  <v-list-item-title>Length of the path: </v-list-item-title>
+                  <v-list-item-subtitle >{{ pathLength }}</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
             </v-list>
           </v-card>
         <vue-context ref="menu" @close="onClose" @open="onOpen">
@@ -60,6 +66,27 @@ import Map from './Map.vue';
 import { fetchPath } from '../Requests';
 import { hasCoords } from '../utils';
 
+function degreesToRadians(degrees) {
+  return degrees * Math.PI / 180;
+}
+
+function distance(coord1, coord2) {
+  let [lat1, lon1] = coord1;
+  let [lat2, lon2] = coord2;
+  const earthRadiusKm = 6371;
+
+  const dLat = degreesToRadians(lat2 - lat1);
+  const dLon = degreesToRadians(lon2 - lon1);
+
+  lat1 = degreesToRadians(lat1);
+  lat2 = degreesToRadians(lat2);
+
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+          + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return earthRadiusKm * c;
+}
+
 export default {
   name: 'PathBuilder',
   components: {
@@ -72,6 +99,7 @@ export default {
       lineCoords: [],
       clickedOnPoint: null,
       geojson: null,
+      pathLength: null,
     };
   },
   methods: {
@@ -79,6 +107,7 @@ export default {
       if (type === 'remove') {
         this.selectedPoints.splice(this.clickedOnPoint.index, 1);
         this.lineCoords = [];
+        this.pathLength = null;
         this.requestPath();
       }
     },
@@ -97,7 +126,11 @@ export default {
       if (this.selectedPoints.length > 1) {
         fetchPath(this.selectedPoints)
           .then((result) => {
-            this.lineCoords = result.data.path;
+            const { path } = result.data;
+            let pathLength = 0;
+            for (let i = 0; i < path.length - 1; i++) pathLength += distance(path[i], path[i + 1]);
+            this.lineCoords = path;
+            this.pathLength = `${pathLength.toFixed(3)} km`;
           })
           .catch((e) => { console.log(e); });
       }
