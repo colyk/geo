@@ -11,6 +11,7 @@ from numba import jit, njit
 
 from .cache import Cache
 from .graph.algorithm.a_star import a_star
+from .graph.algorithm.fast_a_star import fast_a_star
 from .graph.graph import Graph
 from .osm.fetch import OSM
 from .osm.geo_types import Bbox, Coord
@@ -40,8 +41,8 @@ class Path(View):
             cache_name = graph_cache.create_cache_name([s_bbox])
             graph_cache.add(cache_name, graph, format_="object")
             print(f"Build graph took {time.time() - graph_build_time}")
-            print(f"Nodes count {len(graph.nodes)}")
-            print(f"Edge count {len(graph.edges)}")
+        print(f"Nodes count {len(graph.nodes)}")
+        print(f"Edge count {len(graph.edges)}")
 
         find_nodes_time = time.time()
         f_coord = Coord(lat=points[0][0], lon=points[0][1])
@@ -51,10 +52,17 @@ class Path(View):
         print(f"Nodes finding took {time.time() - find_nodes_time}")
         print(f"First node {f_node}")
         print(f"Second node {l_node}")
+        if f_node == l_node:
+            return JsonResponse({"path": points})
 
         a_star_time = time.time()
         path = a_star(graph, f_node, l_node)
         print(f"A* took {time.time() - a_star_time}")
+
+        # fast_a_star_time = time.time()
+        # path = fast_a_star(graph, f_node, l_node)
+        # print(path)
+        # print(f"Cpp A* took {time.time() - fast_a_star_time}")
         if path is None:
             return JsonResponse({"path": points})
 

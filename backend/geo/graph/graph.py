@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import math
 from pprint import pprint
-from typing import List, Union, Dict, Any, Set, Iterator
+from typing import List, Union, Dict, Any, Set, Iterator, Tuple
 
 import numpy as np
 from numba import jit
@@ -21,7 +21,7 @@ class AdjacencyMatrix:
     def __init__(self, graph: Graph):
         self.nodes = list(sorted(graph.nodes, key=lambda n: n.name))
         nodes_count = len(self.nodes)
-        self.matrix = np.zeros(nodes_count * nodes_count).reshape(
+        self.matrix = np.zeros(nodes_count * nodes_count, dtype=np.float32).reshape(
             (nodes_count, nodes_count)
         )
 
@@ -31,6 +31,13 @@ class AdjacencyMatrix:
             idx2 = self.nodes.index(n2)
             self.matrix[idx1][idx2] = edge.weight
             self.matrix[idx2][idx1] = edge.weight
+
+    def get_node_idx(self, node: Node) -> Tuple[int, int]:
+        idx = self.nodes.index(node)
+        return idx, idx
+
+    def get_node_by_idx(self, idx: int) -> Node:
+        return self.nodes[idx]
 
 
 class Node:
