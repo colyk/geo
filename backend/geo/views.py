@@ -11,7 +11,6 @@ from numba import jit, njit
 
 from .cache import Cache
 from .graph.algorithm.a_star import a_star
-from .graph.algorithm.fast_a_star import fast_a_star
 from .graph.graph import Graph
 from .osm.fetch import OSM
 from .osm.geo_types import Bbox, Coord

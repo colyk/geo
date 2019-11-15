@@ -1,25 +1,15 @@
 import json
 import xml.etree.ElementTree as ElementTree
+from typing import Dict
 from xml.dom.minidom import parseString
 
-import kml2geojson
 
-
-class KML:
+class Converter:
     def __init__(self):
         ElementTree.register_namespace("", "http://www.opengis.net/kml/2.2")
 
-    @staticmethod
-    def load_file(filename):
-        kml2geojson.main.convert(filename + ".kml", ".", style_type="leaflet")
-        # with open(filename + ".geojson", "r", encoding="utf-8") as f:
-        #     file = json.loads(f.read())
-        #     with open("myplaces.geojson", "w", encoding="utf-8") as f_w:
-        #         f_w.write(json.dumps(file, indent=4, sort_keys=True))
-
-    @staticmethod
-    def geojson_to_kml(data):
-        kml_string = (
+    def geojson_to_kml(self, geojson: Dict):
+        root = ElementTree.fromstring(
             '<?xml version="1.0" encoding="UTF-8"?>'
             '<kml xmlns="http://www.opengis.net/kml/2.2">'
             "<Document>"
@@ -27,13 +17,9 @@ class KML:
             "</Document>"
             "</kml>"
         )
-        ElementTree.register_namespace("", "http://www.opengis.net/kml/2.2")
-        root = ElementTree.fromstring(kml_string)
-        document = root.find("{http://www.opengis.net/kml/2.2}Document")
-
-        for feature in data["features"]:
+        for feature in geojson["features"]:
             # print(feature["id"])
-            placemark = ElementTree.SubElement(document, "Placemark")
+            placemark = ElementTree.SubElement(root, "Placemark")
             name = ElementTree.SubElement(placemark, "name")
             if "name" in feature["properties"]:
                 name.text = str(feature["properties"]["name"])
@@ -71,6 +57,16 @@ class KML:
 
         out = parseString(ElementTree.tostring(root))
         return out.toprettyxml()
+
+    def _parse_geojson_coords(self, geometry: Dict, placemark):
+        kml_point = ElementTree.SubElement(placemark, geometry["type"])
+        kml_coords = ElementTree.SubElement(kml_point, "coordinates")
+        coords = ""
+        for coord in geometry["coordinates"]:
+            lat = coord[0]
+            lon = coord[1]
+            coords += f"{lat},{lon},0"
+        kml_coords.text = coords
 
     @staticmethod
     def kml_to_geojson(kml_data):
@@ -140,18 +136,12 @@ class KML:
 
 
 if __name__ == "__main__":
-    kml = KML()
-    # kml.load_file("myplaces")
-    # with open("myplaces.geojson", "r", encoding="utf-8") as f:
-    #     kml.geojson_to_kml(json.loads(f.read()))
-
-    # with open("../osm/data.json", "r", encoding="utf-8") as f:
-    #     data = json.loads(f.read())
-    #     result = kml.geojson_to_kml(data)
-    #     print(result)
-    #     with open("out.kml", "w", encoding="utf-8") as kml_file:
-    #         kml_file.write
+    converter = Converter()
+    with open("../osm/data.json", "r", encoding="utf-8") as f:
+        data = json.loads(f.read())
+        result = converter.geojson_to_kml(data)
+        print(result)
 
     with open("out.kml", "r", encoding="utf-8") as kml_file:
-        data = kml.kml_to_geojson(ElementTree.fromstring(kml_file.read()))
+        data = Converter.kml_to_geojson(ElementTree.fromstring(kml_file.read()))
         print(json.dumps(data, indent=4, sort_keys=True))
