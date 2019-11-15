@@ -1,5 +1,5 @@
 import json
-import xml.etree.ElementTree as ElementTree
+import xml.etree.ElementTree as ET
 from typing import Dict
 from xml.dom.minidom import parseString
 
@@ -13,10 +13,10 @@ class XMLError(TypeError):
 
 class Converter:
     def __init__(self):
-        ElementTree.register_namespace("", "http://www.opengis.net/kml/2.2")
+        ET.register_namespace("", "http://www.opengis.net/kml/2.2")
 
     def geojson_to_kml(self, geojson: Dict):
-        root = ElementTree.fromstring(
+        root = ET.fromstring(
             '<?xml version="1.0" encoding="UTF-8"?>'
             '<kml xmlns="http://www.opengis.net/kml/2.2">'
             "<Document>"
@@ -26,25 +26,25 @@ class Converter:
         )
         document = root.find("{http://www.opengis.net/kml/2.2}Document")
         for feature in geojson["features"]:
-            placemark = ElementTree.SubElement(document, "Placemark")  # type: ignore
-            name = ElementTree.SubElement(placemark, "name")
+            placemark = ET.SubElement(document, "Placemark")  # type: ignore
+            name = ET.SubElement(placemark, "name")
             if "name" in feature["properties"]:
                 name.text = str(feature["properties"]["name"])
-            ex_data = ElementTree.SubElement(placemark, "ExtendedData")
-            new_data = ElementTree.SubElement(ex_data, "Data")
+            ex_data = ET.SubElement(placemark, "ExtendedData")
+            new_data = ET.SubElement(ex_data, "Data")
             new_data.set("name", "@id")
-            value = ElementTree.SubElement(new_data, "value")
+            value = ET.SubElement(new_data, "value")
             value.text = str(feature["id"])
             for data in feature["properties"]:
-                new_data = ElementTree.SubElement(ex_data, "Data")
+                new_data = ET.SubElement(ex_data, "Data")
                 # print(data)
                 new_data.set("name", str(data))
-                value = ElementTree.SubElement(new_data, "value")
+                value = ET.SubElement(new_data, "value")
                 value.text = str(feature["properties"][data])
 
             if feature["geometry"]["type"] == "LineString":
-                linestring = ElementTree.SubElement(placemark, "LineString")
-                coordinates = ElementTree.SubElement(linestring, "coordinates")
+                linestring = ET.SubElement(placemark, "LineString")
+                coordinates = ET.SubElement(linestring, "coordinates")
                 new_coordinates = ""
                 for node in feature["geometry"]["coordinates"]:
                     new_coordinates += (
@@ -52,8 +52,8 @@ class Converter:
                     )
                 coordinates.text = str(new_coordinates + "\n\t\t\t\t")
             elif feature["geometry"]["type"] == "Point":
-                point = ElementTree.SubElement(placemark, "Point")
-                coordinates = ElementTree.SubElement(point, "coordinates")
+                point = ET.SubElement(placemark, "Point")
+                coordinates = ET.SubElement(point, "coordinates")
                 new_coordinates = (
                     str(feature["geometry"]["coordinates"][0])
                     + ","
@@ -62,12 +62,12 @@ class Converter:
                 )
                 coordinates.text = new_coordinates
 
-        out = parseString(ElementTree.tostring(root))
+        out = parseString(ET.tostring(root))
         return out.toprettyxml()
 
     def kml_to_geojson(self, kml: str):
         try:
-            kml_data = ElementTree.fromstring(kml)
+            kml_data = ET.fromstring(kml)
         except Exception:
             raise XMLError()
         geojson_data: Dict = {}
