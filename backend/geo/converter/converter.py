@@ -4,6 +4,13 @@ from typing import Dict
 from xml.dom.minidom import parseString
 
 
+class XMLError(TypeError):
+    def __init__(self, message=None):
+        if message is None:
+            message = "Invalid XML"
+        super().__init__(message)
+
+
 class Converter:
     def __init__(self):
         ElementTree.register_namespace("", "http://www.opengis.net/kml/2.2")
@@ -17,9 +24,9 @@ class Converter:
             "</Document>"
             "</kml>"
         )
+        document = root.find("{http://www.opengis.net/kml/2.2}Document")
         for feature in geojson["features"]:
-            # print(feature["id"])
-            placemark = ElementTree.SubElement(root, "Placemark")
+            placemark = ElementTree.SubElement(document, "Placemark")  # type: ignore
             name = ElementTree.SubElement(placemark, "name")
             if "name" in feature["properties"]:
                 name.text = str(feature["properties"]["name"])
@@ -58,81 +65,72 @@ class Converter:
         out = parseString(ElementTree.tostring(root))
         return out.toprettyxml()
 
-    def _parse_geojson_coords(self, geometry: Dict, placemark):
-        kml_point = ElementTree.SubElement(placemark, geometry["type"])
-        kml_coords = ElementTree.SubElement(kml_point, "coordinates")
-        coords = ""
-        for coord in geometry["coordinates"]:
-            lat = coord[0]
-            lon = coord[1]
-            coords += f"{lat},{lon},0"
-        kml_coords.text = coords
-
-    @staticmethod
-    def kml_to_geojson(kml_data):
-        # print(ElementTree.dump(kml_data))
-        geojson_data = {}
+    def kml_to_geojson(self, kml: str):
+        try:
+            kml_data = ElementTree.fromstring(kml)
+        except Exception:
+            raise XMLError()
+        geojson_data: Dict = {}
         features = geojson_data["features"] = []
         geojson_data["type"] = "FeatureCollection"
         document = kml_data.find("{http://www.opengis.net/kml/2.2}Document")
+        if document is None:
+            raise XMLError()
 
-        # print(document)
-        for kml_feature in document.findall(
-            "{http://www.opengis.net/kml/2.2}Placemark"
-        ):
-            # ElementTree.dump(kml_feature)
-            # print("\n\n\n")
-            new_feature = {}
-            new_feature["geometry"] = {}
-            coordinates = new_feature["geometry"]["coordinates"] = []
-            # new_feature["id"] = []
-            new_feature["properties"] = {}
-            new_feature["type"] = "Feature"
+        placemarks = document.findall("{http://www.opengis.net/kml/2.2}Placemark")
+        for kml_feature in placemarks:
+            f_coordinates, new_feature = self._create_geojson_feature()
 
             point = kml_feature.find("{http://www.opengis.net/kml/2.2}Point")
             if point:
                 new_feature["geometry"]["type"] = "Point"
-                coo_text = point.find("{http://www.opengis.net/kml/2.2}coordinates")
-                coo_text = coo_text.text
-                coo_text = coo_text.split(",")
-                # print(coo_text[0])
-                coordinates.append(float(coo_text[0]))
-                coordinates.append(float(coo_text[1]))
+                coordinates = point.find("{http://www.opengis.net/kml/2.2}coordinates")
+                if coordinates is None:
+                    raise TypeError()
+                coords = coordinates.text.split(",")  # type: ignore
+                f_coordinates.extend([float(coords[0]), float(coords[1])])
 
             way = kml_feature.find("{http://www.opengis.net/kml/2.2}LineString")
             if way:
                 new_feature["geometry"]["type"] = "LineString"
-                coo_text = way.find("{http://www.opengis.net/kml/2.2}coordinates")
-                coo_text = coo_text.text
-                # coo_text = coo_text.strip("\n\t")
-                # coo_text = coo_text.strip("\t", "")
-                coo_text = coo_text.replace("\t", "")
-                coo_text = coo_text.strip("\n")
-                coo_text = coo_text.replace("\n", " ")
-                coo_text = coo_text.split(" ")
-                for node in coo_text:
-                    coo_node = node.split(",")
-                    node = []
-                    node.append(float(coo_node[0]))
-                    node.append(float(coo_node[1]))
-                    coordinates.append(node)
+                coordinates = way.find("{http://www.opengis.net/kml/2.2}coordinates")
+                if coordinates is None:
+                    raise TypeError()
+                coords_text = coordinates.text
+                if coords_text is None:
+                    raise TypeError()
+                coords_text = (
+                    coords_text.replace("\t", "").strip("\n").replace("\n", " ")
+                )
+                for node in coords_text.split(" "):
+                    coord = node.split(",")
+                    f_coordinates.append([float(coord[0]), float(coord[1])])
 
-            for extended_data in kml_feature.findall(
-                "{http://www.opengis.net/kml/2.2}ExtendedData"
-            ):
-                for data in extended_data.findall(
-                    "{http://www.opengis.net/kml/2.2}Data"
-                ):
-                    value = data.find("{http://www.opengis.net/kml/2.2}value")
-                    if data.attrib["name"] == "@id":
-                        new_feature["id"] = str(value.text)
-                    else:
-                        new_feature["properties"][str(data.attrib["name"])] = str(
-                            value.text
-                        )
+            self._parse_kml_props(kml_feature, new_feature)
 
             features.append(new_feature)
         return geojson_data
+
+    def _parse_kml_props(self, kml_feature, new_feature):
+        for extended_data in kml_feature.findall(
+            "{http://www.opengis.net/kml/2.2}ExtendedData"
+        ):
+            for data in extended_data.findall("{http://www.opengis.net/kml/2.2}Data"):
+                value = data.find("{http://www.opengis.net/kml/2.2}value")
+                if data.attrib["name"] == "@id":
+                    new_feature["id"] = str(value.text)
+                else:
+                    new_feature["properties"][str(data.attrib["name"])] = str(
+                        value.text
+                    )
+
+    @classmethod
+    def _create_geojson_feature(cls):
+        new_feature = {"geometry": {}}
+        coordinates = new_feature["geometry"]["coordinates"] = []
+        new_feature["properties"] = {}
+        new_feature["type"] = "Feature"
+        return coordinates, new_feature
 
 
 if __name__ == "__main__":
@@ -143,5 +141,5 @@ if __name__ == "__main__":
         print(result)
 
     with open("out.kml", "r", encoding="utf-8") as kml_file:
-        data = Converter.kml_to_geojson(ElementTree.fromstring(kml_file.read()))
+        data = converter.kml_to_geojson(kml_file.read())
         print(json.dumps(data, indent=4, sort_keys=True))

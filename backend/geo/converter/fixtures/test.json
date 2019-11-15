@@ -1,0 +1,62 @@
+{
+    "features": [
+        {
+            "geometry": {
+                "coordinates": [
+                    22.564228,
+                    51.246822
+                ],
+                "type": "Point"
+            },
+            "id": "481919568",
+            "properties": {
+                "crossing": "uncontrolled",
+                "crossing_ref": "zebra",
+                "highway": "crossing",
+                "tactile_paving": "yes"
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    [
+                        22.570862,
+                        51.250147
+                    ],
+                    [
+                        22.570962,
+                        51.250081
+                    ],
+                    [
+                        22.571174,
+                        51.249977
+                    ],
+                    [
+                        22.573115,
+                        51.249839
+                    ],
+                    [
+                        22.573727,
+                        51.249776
+                    ],
+                    [
+                        22.57424,
+                        51.24971
+                    ],
+                    [
+                        22.574237,
+                        51.249694
+                    ]
+                ],
+                "type": "LineString"
+            },
+            "id": "65351909",
+            "properties": {
+                "highway": "footway"
+            },
+            "type": "Feature"
+        }
+    ],
+    "type": "FeatureCollection"
+}

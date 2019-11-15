@@ -1,0 +1,51 @@
+<?xml version="1.0" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+	<Document>
+		<name>gedit kml</name>
+		<Placemark>
+			<name/>
+			<ExtendedData>
+				<Data name="@id">
+					<value>481919568</value>
+				</Data>
+				<Data name="crossing">
+					<value>uncontrolled</value>
+				</Data>
+				<Data name="crossing_ref">
+					<value>zebra</value>
+				</Data>
+				<Data name="highway">
+					<value>crossing</value>
+				</Data>
+				<Data name="tactile_paving">
+					<value>yes</value>
+				</Data>
+			</ExtendedData>
+			<Point>
+				<coordinates>22.564228,51.246822,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name/>
+			<ExtendedData>
+				<Data name="@id">
+					<value>65351909</value>
+				</Data>
+				<Data name="highway">
+					<value>footway</value>
+				</Data>
+			</ExtendedData>
+			<LineString>
+				<coordinates>
+					22.570862,51.250147,0
+					22.570962,51.250081,0
+					22.571174,51.249977,0
+					22.573115,51.249839,0
+					22.573727,51.249776,0
+					22.57424,51.24971,0
+					22.574237,51.249694,0
+				</coordinates>
+			</LineString>
+		</Placemark>
+	</Document>
+</kml>
