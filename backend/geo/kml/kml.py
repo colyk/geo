@@ -1,22 +1,24 @@
 import json
-import kml2geojson
-from xml.dom.minidom import parseString
 import xml.etree.ElementTree as ElementTree
-from typing import List
+from xml.dom.minidom import parseString
+
+import kml2geojson
 
 
 class KML:
     def __init__(self):
         ElementTree.register_namespace("", "http://www.opengis.net/kml/2.2")
 
-    def load_file(self, filename):
+    @staticmethod
+    def load_file(filename):
         kml2geojson.main.convert(filename + ".kml", ".", style_type="leaflet")
         # with open(filename + ".geojson", "r", encoding="utf-8") as f:
         #     file = json.loads(f.read())
         #     with open("myplaces.geojson", "w", encoding="utf-8") as f_w:
         #         f_w.write(json.dumps(file, indent=4, sort_keys=True))
 
-    def geojson_to_kml(self, data):
+    @staticmethod
+    def geojson_to_kml(data):
         kml_string = (
             '<?xml version="1.0" encoding="UTF-8"?>'
             '<kml xmlns="http://www.opengis.net/kml/2.2">'
@@ -70,7 +72,8 @@ class KML:
         out = parseString(ElementTree.tostring(root))
         return out.toprettyxml()
 
-    def kml_to_geojson(self, kml_data):
+    @staticmethod
+    def kml_to_geojson(kml_data):
         # print(ElementTree.dump(kml_data))
         geojson_data = {}
         features = geojson_data["features"] = []
@@ -78,7 +81,9 @@ class KML:
         document = kml_data.find("{http://www.opengis.net/kml/2.2}Document")
 
         # print(document)
-        for kml_feature in document.findall("{http://www.opengis.net/kml/2.2}Placemark"):
+        for kml_feature in document.findall(
+            "{http://www.opengis.net/kml/2.2}Placemark"
+        ):
             # ElementTree.dump(kml_feature)
             # print("\n\n\n")
             new_feature = {}
@@ -116,13 +121,19 @@ class KML:
                     node.append(float(coo_node[1]))
                     coordinates.append(node)
 
-            for extended_data in kml_feature.findall("{http://www.opengis.net/kml/2.2}ExtendedData"):
-                for data in extended_data.findall("{http://www.opengis.net/kml/2.2}Data"):
+            for extended_data in kml_feature.findall(
+                "{http://www.opengis.net/kml/2.2}ExtendedData"
+            ):
+                for data in extended_data.findall(
+                    "{http://www.opengis.net/kml/2.2}Data"
+                ):
                     value = data.find("{http://www.opengis.net/kml/2.2}value")
                     if data.attrib["name"] == "@id":
                         new_feature["id"] = str(value.text)
                     else:
-                        new_feature["properties"][str(data.attrib["name"])] = str(value.text)
+                        new_feature["properties"][str(data.attrib["name"])] = str(
+                            value.text
+                        )
 
             features.append(new_feature)
         return geojson_data

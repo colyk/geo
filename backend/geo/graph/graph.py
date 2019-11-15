@@ -9,32 +9,27 @@ from numba import jit
 
 from ..osm import Coord
 
-"""
-    Todo:
-    Draw graph function
-"""
-
 
 class AdjacencyMatrix:
-    __slots__ = ["matrix", "nodes"]
+    __slots__ = ["weights", "nodes", "edges"]
 
     def __init__(self, graph: Graph):
         self.nodes = list(sorted(graph.nodes, key=lambda n: n.name))
+        self.edges = list(sorted(graph.edges, key=lambda e: e.weight))
         nodes_count = len(self.nodes)
-        self.matrix = np.zeros(nodes_count * nodes_count, dtype=np.float32).reshape(
+        self.weights = np.zeros(nodes_count * nodes_count, dtype=np.float32).reshape(
             (nodes_count, nodes_count)
         )
 
-        for edge in graph.edges:
+        for edge in self.edges:
             n1, n2 = edge.edge
             idx1 = self.nodes.index(n1)
             idx2 = self.nodes.index(n2)
-            self.matrix[idx1][idx2] = edge.weight
-            self.matrix[idx2][idx1] = edge.weight
+            self.weights[idx1][idx2] = edge.weight
+            self.weights[idx2][idx1] = edge.weight
 
-    def get_node_idx(self, node: Node) -> Tuple[int, int]:
-        idx = self.nodes.index(node)
-        return idx, idx
+    def get_node_idx(self, node: Node) -> int:
+        return self.nodes.index(node)
 
     def get_node_by_idx(self, idx: int) -> Node:
         return self.nodes[idx]
@@ -184,4 +179,4 @@ if __name__ == "__main__":
     pprint(g.json())
 
     m = g.matrix
-    print(m.matrix)
+    print(m.weights)

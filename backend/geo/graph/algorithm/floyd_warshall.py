@@ -5,7 +5,7 @@ from ..graph import Graph
 
 def floyd_warshall(graph: Graph):
     matrix = graph.matrix
-    m = matrix.matrix
+    m = matrix.weights
     v = len(m)
     p = np.zeros(m.shape)
     for i in range(0, v):
