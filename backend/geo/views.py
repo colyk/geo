@@ -12,9 +12,9 @@ from numba import jit, njit
 from .cache import Cache
 from .graph.algorithm.a_star import a_star
 from .graph.graph import Graph
-from .osm.fetch import OSM
-from .osm.geo_types import Bbox, Coord
-from .osm.geojson_tools import create_graph_from_geojson
+from .fetch.fetch import OSM
+from .fetch.geo_types import Bbox, Coord
+from .fetch.geojson_tools import create_graph_from_geojson
 
 
 @method_decorator(csrf_exempt, name="dispatch")

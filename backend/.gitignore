@@ -5,6 +5,6 @@ db.sqlite3
 __pycache__/
 *.pyc
 
-geo/osm/cache
-geo/osm/data.json
+geo/fetch/cache
+geo/fetch/data.json
 geo/cache/cache

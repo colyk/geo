@@ -3,7 +3,7 @@ from typing import Dict, Union
 import requests
 
 if __package__ is None or not __package__:
-    from backend.geo.osm import Coord
+    from backend.geo.fetch import Coord
 else:
     from . import Coord
 

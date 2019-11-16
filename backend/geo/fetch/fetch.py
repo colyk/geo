@@ -7,10 +7,10 @@ import requests
 from numba import jit
 
 if __package__ is None or not __package__:
-    from backend.geo.osm.osm_types import types
+    from backend.geo.fetch.osm_types import types
     from backend.geo.cache import Cache
-    from backend.geo.osm import Bbox, Coord
-    from backend.geo.osm import OSMError
+    from backend.geo.fetch import Bbox, Coord
+    from backend.geo.fetch import OSMError
 else:
     from .osm_types import types
     from ..cache import Cache

@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ..osm import Coord as C
+from ..fetch import Coord as C
 from .graph import Node, Edge, Graph
 from .utils import get_lines_intersection_point
 

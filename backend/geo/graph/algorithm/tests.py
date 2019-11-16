@@ -2,7 +2,7 @@ from itertools import combinations
 
 from django.test import TestCase
 
-from ...osm import Coord as C
+from ...fetch import Coord as C
 from .floyd_warshall import floyd_warshall, get_path
 from .prim import prim
 from .dijkstra import dijkstra

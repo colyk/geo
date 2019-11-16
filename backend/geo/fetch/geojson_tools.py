@@ -4,7 +4,7 @@ from typing import Dict
 from numba import jit
 
 from ..graph.graph import Node, Graph, Edge
-from ..osm import Coord
+from ..fetch import Coord
 
 
 @jit(forceobj=True, parallel=True)

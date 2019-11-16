@@ -7,7 +7,7 @@ from typing import List, Union, Dict, Any, Set, Iterator, Tuple
 import numpy as np
 from numba import jit
 
-from ..osm import Coord
+from ..fetch import Coord
 
 
 class AdjacencyMatrix:
