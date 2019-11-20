@@ -33,8 +33,9 @@ class Converter:
             ex_data = ET.SubElement(placemark, "ExtendedData")
             new_data = ET.SubElement(ex_data, "Data")
             new_data.set("name", "@id")
-            value = ET.SubElement(new_data, "value")
-            value.text = str(feature["id"])
+            if "id" in feature:
+                value = ET.SubElement(new_data, "value")
+                value.text = str(feature["id"])
             for data in feature["properties"]:
                 new_data = ET.SubElement(ex_data, "Data")
                 # print(data)
@@ -100,7 +101,7 @@ class Converter:
                 if coords_text is None:
                     raise TypeError()
                 coords_text = (
-                    coords_text.replace("\t", "").strip("\n").replace("\n", " ")
+                    coords_text.replace("\t", "").strip("\n ").replace("\n", " ")
                 )
                 for node in coords_text.split(" "):
                     coord = node.split(",")
