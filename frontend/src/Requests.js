@@ -8,6 +8,8 @@ export function fetchPath(points = []) {
 
 export function getInfoByCoord(lat, lon) {
   const url = 'https://nominatim.openstreetmap.org/reverse';
-  const params = { lat, lon, format: 'json' };
+  const params = {
+    lat, lon, format: 'json', 'accept-language': 'pl',
+  };
   return axios.get(url, { params });
 }

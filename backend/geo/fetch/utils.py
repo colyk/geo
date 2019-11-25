@@ -10,6 +10,7 @@ else:
 
 def get_info_by_coord(coord: Coord) -> Union[Dict, None]:
     url = "https://nominatim.openstreetmap.org/reverse"
+    # "accept-language": "pl"
     params: Dict = {"lat": coord.lat, "lon": coord.lon, "format": "json"}
     res = requests.get(url, params)
     if res.ok:

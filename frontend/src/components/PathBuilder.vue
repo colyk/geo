@@ -143,8 +143,12 @@ export default {
     addPointInfo(lat, lon) {
       getInfoByCoord(lat, lon)
         .then(({ data }) => {
-          const info = { lat: Number(data.lat).toFixed(7), lon: Number(data.lon).toFixed(7), name: data.display_name };
-          console.log(info);
+          const info = {
+            lat: Number(data.lat).toFixed(7),
+            lon: Number(data.lon).toFixed(7),
+            name: data.display_name,
+          };
+          console.log(data);
           this.pointsInfo.push(info);
         })
         .catch((e) => {
