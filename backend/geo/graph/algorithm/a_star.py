@@ -7,7 +7,7 @@ from numba import jit, njit
 from ..graph import Graph, Node
 
 
-@njit(fastmath=True)
+@njit(fastmath=True, cache=True)
 def heuristic(s_lat, s_lon, e_lat, e_lon):
     return sqrt((s_lat - e_lat) * (s_lat - e_lat) + (s_lon - e_lon) * (s_lon - e_lon))
 

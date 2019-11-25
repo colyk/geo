@@ -24,55 +24,68 @@ class Path(View):
         graph_cache = Cache(prefix="graph_cache")
         points = json.loads(request.body.decode("utf-8")).get("points", [])
         bbox = get_bbox(points)
-        graph = get_graph_cache(graph_cache, bbox)
+        graph = build_graph(bbox, graph_cache)
 
-        if graph is None:
-            osm = OSM(debug=True)
-            osm_time = time.time()
-            geojson = osm.fetch_by_bbox(bbox, "_pedestrian_way", ["way"])
-            print(f"OSM: {time.time() - osm_time}")
-
-            with open("test", "w") as f:
-                f.write(json.dumps(geojson, indent=4))
-            graph_build_time = time.time()
-            graph = create_graph_from_geojson(geojson)
-            s_bbox = str(bbox)
-            cache_name = graph_cache.create_cache_name([s_bbox])
-            graph_cache.add(cache_name, graph, format_="object")
-            print(f"Build graph took {time.time() - graph_build_time}")
-        print(f"Nodes count {len(graph.nodes)}")
-        print(f"Edge count {len(graph.edges)}")
-
-        find_nodes_time = time.time()
-        f_coord = Coord(lat=points[0][0], lon=points[0][1])
-        l_coord = Coord(lat=points[-1][0], lon=points[-1][1])
-        f_node = find_nearest_node(graph, f_coord)
-        l_node = find_nearest_node(graph, l_coord)
-        print(f"Nodes finding took {time.time() - find_nodes_time}")
-        print(f"First node {f_node}")
-        print(f"Second node {l_node}")
-        if f_node == l_node:
+        nodes = find_nearest_nodes(graph, points)
+        if nodes[0] == nodes[-1]:
             return JsonResponse({"path": points})
 
-        a_star_time = time.time()
-        path = a_star(graph, f_node, l_node)
-        print(f"A* took {time.time() - a_star_time}")
+        path = build_path(graph, nodes)
 
-        # fast_a_star_time = time.time()
-        # path = fast_a_star(graph, f_node, l_node)
-        # print(path)
-        # print(f"Cpp A* took {time.time() - fast_a_star_time}")
         if path is None:
             return JsonResponse({"path": points})
-
-        path = [[float(round(n.lat, 7)), float(round(n.lon, 7))] for n in path]
-        path.insert(0, points[0])
-        path.append(points[-1])
 
         print(f"Total time: {time.time() - total_time}")
         return JsonResponse({"path": path})
 
 
+def build_path(graph, nodes):
+    a_star_time = time.time()
+    path = []
+    for f_node, s_node in zip(nodes, nodes[1:]):
+        p = a_star(graph, f_node, s_node)
+        path.extend(p)
+    path = [[float(round(n.lat, 7)), float(round(n.lon, 7))] for n in path]
+    print(f"A* took {time.time() - a_star_time}")
+    return path
+
+
+def find_nearest_nodes(graph, points):
+    find_nodes_time = time.time()
+    coords = [Coord(lat=point[0], lon=point[1]) for point in points]
+    nodes = [find_nearest_node(graph, coord) for coord in coords]
+    print(f"Nodes finding took {time.time() - find_nodes_time}")
+    print(f"First node {nodes[0]}")
+    print(f"Last node {nodes[-1]}")
+    return nodes
+
+
+def build_graph(bbox, graph_cache):
+    graph_from_cache_time = time.time()
+    graph = get_graph_cache(graph_cache, bbox)
+    print(f"Getting graph from cache graph took {time.time() - graph_from_cache_time}")
+
+    if graph is None:
+        osm = OSM(debug=True)
+        osm_time = time.time()
+        geojson = osm.fetch_by_bbox(bbox, "_pedestrian_way", ["way"])
+        print(f"OSM: {time.time() - osm_time}")
+
+        with open("test", "w") as f:
+            f.write(json.dumps(geojson, indent=4))
+        graph_build_time = time.time()
+        graph = create_graph_from_geojson(geojson)
+        s_bbox = str(bbox)
+        cache_name = graph_cache.create_cache_name([s_bbox])
+        graph_cache.add(cache_name, graph, format_="object")
+        print(f"Build graph took {time.time() - graph_build_time}")
+
+    print(f"Nodes count {len(graph.nodes)}")
+    print(f"Edge count {len(graph.edges)}")
+    return graph
+
+
+@jit(forceobj=True)
 def get_graph_cache(graph_cache, bbox):
     for cache in graph_cache.caches:
         cache_bbox = graph_cache.parse_cache_name(cache)[0]
@@ -134,6 +147,6 @@ def find_nearest_node(graph: Graph, destination: Coord):
     return nearest_node
 
 
-@njit(fastmath=True)
+@njit(fastmath=True, cache=True)
 def calc_distance(x1, x2, y1, y2):
     return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
