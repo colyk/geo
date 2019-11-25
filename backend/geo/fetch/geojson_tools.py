@@ -1,37 +1,47 @@
 from itertools import combinations
-from typing import Dict
+from typing import Dict, List
 
 from numba import jit
 
-from ..graph.graph import Node, Graph, Edge
 from ..fetch import Coord
+from ..graph.graph import Node, Graph, Edge
 
 
-@jit(forceobj=True, parallel=True)
 def create_graph_from_geojson(geojson: Dict) -> Graph:
     g = Graph()
     for feature in geojson["features"]:
-        meta = feature["properties"]
+        # meta = feature["properties"]
         name = feature["id"]
         coords = feature["geometry"]["coordinates"]
         if feature["geometry"]["type"] == "Point":
             # Mainly it is a meta information
             continue
+        try:
+            connect_nodes(coords, g, name)
+        except ValueError:
+            print("Build graph data error")
 
-        prev_node = None
-        for coord in coords:
-            c = Coord(lon=coord[0], lat=coord[1])
-            n = Node(name, c, meta)
-            if prev_node is not None and cmp_node(n, prev_node):
-                continue
-            g.add_node(n)
-            if prev_node is not None:
-                g.add_edge(Edge(n, prev_node))
-            prev_node = n
+    connect_intercepted_nodes(g)
+    return g
 
-    # find interception nodes and connect them
-    edges_combinations = combinations(g.edges, 2)
-    for f_edge, s_edge in edges_combinations:
+
+@jit(forceobj=True)
+def connect_nodes(coords: List, g: Graph, name: str) -> None:
+    prev_node = None
+    for coord in coords:
+        c = Coord(lon=coord[0], lat=coord[1])
+        n = Node(name, c)
+        if prev_node is not None and cmp_node(n, prev_node):
+            continue
+        g.add_node(n)
+        if prev_node is not None:
+            g.add_edge(Edge(n, prev_node))
+        prev_node = n
+
+
+@jit(forceobj=True)
+def connect_intercepted_nodes(g: Graph) -> None:
+    for f_edge, s_edge in combinations(g.edges, 2):
         n1, n2 = f_edge.edge
         n3, n4 = s_edge.edge
         if cmp_node(n1, n3):
@@ -43,9 +53,8 @@ def create_graph_from_geojson(geojson: Dict) -> Graph:
         elif cmp_node(n2, n4):
             g.add_edge(Edge(n2, n4))
 
-    return g
 
-
+@jit(forceobj=True)
 def cmp_node(f_node, s_node):
     return (
         f_node.lon == s_node.lon

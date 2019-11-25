@@ -1,6 +1,6 @@
 import json
-from math import sqrt
 import time
+from math import sqrt
 from typing import List
 
 from django.http import JsonResponse
@@ -10,11 +10,11 @@ from django.views.generic.base import View
 from numba import jit, njit
 
 from .cache import Cache
-from .graph.algorithm.a_star import a_star
-from .graph.graph import Graph
 from .fetch.fetch import OSM
 from .fetch.geo_types import Bbox, Coord
 from .fetch.geojson_tools import create_graph_from_geojson
+from .graph.algorithm.a_star import a_star
+from .graph.graph import Graph
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -44,7 +44,11 @@ def build_path(graph, nodes):
     path = []
     for f_node, s_node in zip(nodes, nodes[1:]):
         p = a_star(graph, f_node, s_node)
-        path.extend(p)
+        if p is not None:
+            path.extend(p)
+        else:
+            path.append(f_node)
+            path.append(s_node)
     path = [[float(round(n.lat, 7)), float(round(n.lon, 7))] for n in path]
     print(f"A* took {time.time() - a_star_time}")
     return path
@@ -63,11 +67,10 @@ def find_nearest_nodes(graph, points):
 def build_graph(bbox, graph_cache):
     graph_from_cache_time = time.time()
     graph = get_graph_cache(graph_cache, bbox)
-    print(f"Getting graph from cache graph took {time.time() - graph_from_cache_time}")
 
     if graph is None:
-        osm = OSM(debug=True)
         osm_time = time.time()
+        osm = OSM(debug=True)
         geojson = osm.fetch_by_bbox(bbox, "_pedestrian_way", ["way"])
         print(f"OSM: {time.time() - osm_time}")
 
@@ -79,6 +82,10 @@ def build_graph(bbox, graph_cache):
         cache_name = graph_cache.create_cache_name([s_bbox])
         graph_cache.add(cache_name, graph, format_="object")
         print(f"Build graph took {time.time() - graph_build_time}")
+    else:
+        print(
+            f"Getting graph from cache graph took {time.time() - graph_from_cache_time}"
+        )
 
     print(f"Nodes count {len(graph.nodes)}")
     print(f"Edge count {len(graph.edges)}")

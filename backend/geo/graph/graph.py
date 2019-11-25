@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import math
 from pprint import pprint
-from typing import List, Union, Dict, Any, Set, Iterator, Tuple
+from typing import List, Union, Dict, Any, Set, Iterator
 
 import numpy as np
 from numba import jit
@@ -61,7 +61,7 @@ class Node:
         )
 
     def __repr__(self):
-        return f"name: {self.name}, lon: {self.lon:.6f}, lat: {self.lat:.6f}"
+        return f"name: {self.name}, lon: {self.lon:.8f}, lat: {self.lat:.8f}, meta: {self.meta}"
 
     def __gt__(self, other):
         return self.name > other.name
