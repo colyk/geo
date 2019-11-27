@@ -17,16 +17,14 @@ class AdjacencyMatrix:
         self.nodes = list(sorted(graph.nodes, key=lambda n: n.name))
         self.edges = list(sorted(graph.edges, key=lambda e: e.weight))
         nodes_count = len(self.nodes)
-        self.weights = np.zeros(nodes_count * nodes_count, dtype=np.float32).reshape(
-            (nodes_count, nodes_count)
-        )
+        self.weights = np.zeros((nodes_count, nodes_count), dtype=np.float32)
 
         for edge in self.edges:
             n1, n2 = edge.edge
             idx1 = self.nodes.index(n1)
             idx2 = self.nodes.index(n2)
-            self.weights[idx1][idx2] = edge.weight
-            self.weights[idx2][idx1] = edge.weight
+            self.weights[idx1, idx2] = edge.weight
+            self.weights[idx2, idx1] = edge.weight
 
     def get_node_idx(self, node: Node) -> int:
         return self.nodes.index(node)
@@ -61,7 +59,7 @@ class Node:
         )
 
     def __repr__(self):
-        return f"name: {self.name}, lon: {self.lon:.8f}, lat: {self.lat:.8f}, meta: {self.meta}"
+        return f"name: {self.name}, lon: {self.lon:.7f}, lat: {self.lat:.7f}, meta: {self.meta}"
 
     def __gt__(self, other):
         return self.name > other.name
