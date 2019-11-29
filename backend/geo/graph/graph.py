@@ -4,7 +4,9 @@ import math
 from pprint import pprint
 from typing import List, Union, Dict, Any, Set, Iterator
 
+import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.collections import LineCollection
 from numba import jit
 
 from ..fetch import Coord
@@ -150,6 +152,24 @@ class Graph:
     @property
     def matrix(self) -> AdjacencyMatrix:
         return AdjacencyMatrix(self)
+
+    def draw(self):
+        if not self.nodes:
+            return
+
+        coords = [(n.lat, n.lon) for n in self.nodes]
+        x, y = zip(*coords)
+        lines = []
+        for edge in self.edges:
+            f_node, s_node = edge.edge
+            lines.append([(f_node.lat, f_node.lon), (s_node.lat, s_node.lon)])
+
+        fig = plt.figure()
+        ax1 = fig.add_subplot(1, 1, 1)
+        ax1.add_collection(LineCollection(lines, colors=["r"]))
+        ax1.autoscale()
+        ax1.scatter(x, y, c=["b"], zorder=2)
+        plt.show()
 
     def __add__(self, other):
         nodes = self.nodes | other.nodes
