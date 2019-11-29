@@ -157,19 +157,25 @@ class Graph:
         if not self.nodes:
             return
 
-        coords = [(n.lat, n.lon) for n in self.nodes]
-        x, y = zip(*coords)
+        coords = [(n.lon, n.lat) for n in self.nodes]
+        points_x, points_y = zip(*coords)
+
         lines = []
         for edge in self.edges:
             f_node, s_node = edge.edge
-            lines.append([(f_node.lat, f_node.lon), (s_node.lat, s_node.lon)])
+            lines.append([(f_node.lon, f_node.lat), (s_node.lon, s_node.lat)])
+
+        plt.style.use("fivethirtyeight")
 
         fig = plt.figure()
-        ax1 = fig.add_subplot(1, 1, 1)
-        ax1.add_collection(LineCollection(lines, colors=["r"]))
-        ax1.autoscale()
-        ax1.scatter(x, y, c=["b"], zorder=2)
-        plt.show()
+        ax = fig.add_subplot(1, 1, 1)
+        ax.set_title("Gedit network")
+
+        ax.add_collection(LineCollection(lines, colors=["r"]), autolim=True)
+        ax.scatter(points_x, points_y, c=["b"], zorder=2, s=70)
+
+        ax.autoscale()
+        ax.autoscale_view()
 
     def __add__(self, other):
         nodes = self.nodes | other.nodes
@@ -192,6 +198,8 @@ if __name__ == "__main__":
     w_l_edge = Edge(warsaw, lublin)
     g.add_nodes([warsaw, lublin])
     g.add_edge(w_l_edge)
+
+    g.draw()
 
     print(g)
     pprint(g.json())
