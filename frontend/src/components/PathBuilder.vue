@@ -24,8 +24,12 @@
             outlined
             tile
           >
-            Selected points:
-            <v-list dense>
+              <v-card-title class="pb-0">
+
+      <span class="title font-weight-light">Selected points:</span>
+    </v-card-title>
+             <v-card-text>
+            <v-list dense class="pt-0">
               <v-list-item
                 v-for="(point, index) in pointsInfo"
                 :key="index"
@@ -39,11 +43,13 @@
               </v-list-item>
               <v-list-item v-if="pathLength">
                 <v-list-item-content>
-                  <v-list-item-title>Length of the path: </v-list-item-title>
+                  <v-list-item-title><b>{{ walkTime }}</b> on foot</v-list-item-title>
                   <v-list-item-subtitle >{{ pathLength }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
+                </v-card-text>
+
           </v-card>
         <vue-context ref="menu" @close="onClose" @open="onOpen">
           <v-list dense>
@@ -65,28 +71,7 @@
 import { VueContext } from 'vue-context';
 import Map from './Map.vue';
 import { fetchPath, getInfoByCoord } from '../Requests';
-import { hasCoords } from '../utils';
-
-function degreesToRadians(degrees) {
-  return degrees * Math.PI / 180;
-}
-
-function distance(coord1, coord2) {
-  let [lat1, lon1] = coord1;
-  let [lat2, lon2] = coord2;
-  const earthRadiusKm = 6371;
-
-  const dLat = degreesToRadians(lat2 - lat1);
-  const dLon = degreesToRadians(lon2 - lon1);
-
-  lat1 = degreesToRadians(lat1);
-  lat2 = degreesToRadians(lat2);
-
-  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
-          + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return earthRadiusKm * c;
-}
+import { hasCoords, distance, distanceToWalkTime } from '../utils';
 
 export default {
   name: 'PathBuilder',
@@ -102,6 +87,7 @@ export default {
       clickedOnPoint: null,
       geojson: null,
       pathLength: null,
+      walkTime: null,
     };
   },
   methods: {
@@ -111,6 +97,7 @@ export default {
         this.pointsInfo.splice(this.clickedOnPoint.index, 1);
         this.lineCoords = [];
         this.pathLength = null;
+        this.walkTime = null;
         this.requestPath();
       }
     },
@@ -132,9 +119,9 @@ export default {
         fetchPath(this.selectedPoints)
           .then((result) => {
             const { path } = result.data;
-            let pathLength = 0;
-            for (let i = 0; i < path.length - 1; i++) pathLength += distance(path[i], path[i + 1]);
+            const pathLength = distance(path);
             this.lineCoords = path;
+            this.walkTime = distanceToWalkTime(pathLength);
             this.pathLength = `${pathLength.toFixed(3)} km`;
           })
           .catch((e) => { console.log(e); });
